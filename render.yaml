@@ -2,7 +2,8 @@ services:
   - type: web
     name: indemand-ai-recruiter
     runtime: docker
-    plan: free
+    plan: free            # free instance: no disk, sleeps after 15 min without traffic (a pinger on /healthz keeps it awake)
+    region: oregon
     healthCheckPath: /healthz
     autoDeploy: true
     envVars:

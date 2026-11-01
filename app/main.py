@@ -290,7 +290,7 @@ def create_app() -> FastAPI:
     def robots():
         return PlainTextResponse("User-agent: *\nDisallow: /\n")
 
-    @app.get("/healthz", include_in_schema=False)
+    @app.api_route("/healthz", methods=["GET", "HEAD"], include_in_schema=False)  # HEAD too: uptime monitors default to it
     def healthz():
         return {"ok": True}
 

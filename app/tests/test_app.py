@@ -425,3 +425,8 @@ def test_database_made_before_the_rebuilt_column_is_migrated_in_place(tmp_path):
     store.reset(old)
     assert store.get("keep")["rebuilt"] == 0 and store.get("keep")["status"] == "ready"
     store.reset()
+
+
+def test_healthz_answers_get_and_head_without_a_token(client):
+    assert client.get("/healthz").json() == {"ok": True}
+    assert client.head("/healthz").status_code == 200  # uptime monitors default to HEAD
