@@ -1,0 +1,12 @@
+.env
+.env.*
+!.env.example
+spike/.venv/
+spike/.venv312/
+spike/out/
+data/
+__pycache__/
+*.pyc
+node_modules/
+web/dist/
+.venv-app/

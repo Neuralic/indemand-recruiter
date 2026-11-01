@@ -1,0 +1,166 @@
+"""SQLite storage for the product (stdlib sqlite3). One row per interview, keyed by the Vapi call id (live) or a fixed id (sample).
+
+The host's disk may be ephemeral (Render free): everything live can be rebuilt from the Vapi call id, and the samples are re-seeded
+from app/seed/samples.json at startup. `is_sample` and `label` live IN THE DATA so a simulated candidate can never be shown as a person.
+"""
+
+from __future__ import annotations
+
+import json
+import sqlite3
+import threading
+import time
+import uuid
+from contextlib import contextmanager
+from datetime import datetime, timezone
+
+import app.config as cfg
+
+SCHEMA = """
+CREATE TABLE IF NOT EXISTS interviews (
+  id TEXT PRIMARY KEY,                 -- Vapi call id (live) | 'sample-<kind>' (simulated)
+  kind TEXT NOT NULL,                  -- live | sample
+  role_id TEXT NOT NULL,
+  candidate_name TEXT NOT NULL,
+  label TEXT NOT NULL,                 -- 'Live demo session' | 'Sample candidate (simulated)'
+  sample_kind TEXT,                    -- strong | borderline | weak
+  status TEXT NOT NULL,                -- in-progress | processing | ready | failed | unusable
+  created_at REAL NOT NULL, ended_at REAL, duration_s REAL, ended_reason TEXT,
+  has_recording INTEGER NOT NULL DEFAULT 0,
+  turns_json TEXT, card_json TEXT, score INTEGER, recommendation TEXT,
+  attempts INTEGER NOT NULL DEFAULT 0, error TEXT, generated_in_s REAL, updated_at REAL
+);
+CREATE TABLE IF NOT EXISTS sessions (
+  id TEXT PRIMARY KEY, created_at REAL NOT NULL, call_id TEXT, closed_at REAL
+);
+"""
+
+_lock = threading.RLock()
+_conn: sqlite3.Connection | None = None
+
+
+def conn() -> sqlite3.Connection:
+    global _conn
+    if _conn is None:
+        cfg.DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+        _conn = sqlite3.connect(cfg.DB_PATH, check_same_thread=False, isolation_level=None)
+        _conn.row_factory = sqlite3.Row
+        _conn.executescript(SCHEMA)
+    return _conn
+
+
+def reset(path=None) -> None:
+    """Close and forget the connection (tests point DB_PATH elsewhere first)."""
+    global _conn
+    if _conn is not None:
+        _conn.close()
+    _conn = None
+    if path is not None:
+        from pathlib import Path
+        cfg.DB_PATH = Path(path)
+
+
+def q(sql: str, *args) -> list[sqlite3.Row]:
+    with _lock:
+        return conn().execute(sql, args).fetchall()
+
+
+def one(sql: str, *args) -> sqlite3.Row | None:
+    rows = q(sql, *args)
+    return rows[0] if rows else None
+
+
+def run(sql: str, *args) -> None:
+    with _lock:
+        conn().execute(sql, args)
+
+
+@contextmanager
+def tx():
+    with _lock:
+        c = conn()
+        c.execute("BEGIN IMMEDIATE")
+        try:
+            yield c
+            c.execute("COMMIT")
+        except Exception:
+            c.execute("ROLLBACK")
+            raise
+
+
+# ---- sessions: spend protection (kill switch, concurrency, daily cap) ---------------------------------------------------------------
+class SessionRefused(Exception):
+    def __init__(self, code: int, message: str):
+        super().__init__(message)
+        self.code, self.message = code, message
+
+
+def _utc_midnight(now: float) -> float:
+    d = datetime.fromtimestamp(now, timezone.utc)
+    return d.replace(hour=0, minute=0, second=0, microsecond=0).timestamp()
+
+
+def open_session(now: float | None = None) -> str:
+    now = now or time.time()
+    if cfg.KILL_SWITCH:
+        raise SessionRefused(503, "Interviews are paused right now. Please try again later.")
+    with tx() as c:
+        today = c.execute("SELECT COUNT(*) FROM sessions WHERE created_at >= ?", (_utc_midnight(now),)).fetchone()[0]
+        if today >= cfg.DAILY_SESSION_CAP:
+            raise SessionRefused(429, "The daily limit for demo interviews has been reached. Please try again tomorrow.")
+        active = c.execute("SELECT COUNT(*) FROM sessions WHERE closed_at IS NULL AND created_at > ?",
+                           (now - cfg.MAX_CALL_SECONDS - 120,)).fetchone()[0]
+        if active >= cfg.MAX_CONCURRENT:
+            raise SessionRefused(429, "Another interview is in progress. Please try again in a few minutes.")
+        sid = uuid.uuid4().hex
+        c.execute("INSERT INTO sessions (id, created_at) VALUES (?, ?)", (sid, now))
+    return sid
+
+
+def close_session(sid: str) -> sqlite3.Row | None:
+    run("UPDATE sessions SET closed_at = COALESCE(closed_at, ?) WHERE id = ?", time.time(), sid)
+    return one("SELECT * FROM sessions WHERE id = ?", sid)
+
+
+# ---- interviews ---------------------------------------------------------------------------------------------------------------------
+def create_live(call_id: str, name: str = "", role_id: str | None = None) -> None:
+    now = time.time()
+    run("INSERT OR IGNORE INTO interviews (id, kind, role_id, candidate_name, label, status, created_at, updated_at) "
+        "VALUES (?, 'live', ?, ?, ?, 'in-progress', ?, ?)",
+        call_id, role_id or cfg.LIVE_ROLE_ID, name or cfg.LIVE_LABEL, cfg.LIVE_LABEL, now, now)
+
+
+def update(interview_id: str, **fields) -> None:
+    if not fields:
+        return
+    fields["updated_at"] = time.time()
+    cols = ", ".join(f"{k} = ?" for k in fields)
+    run(f"UPDATE interviews SET {cols} WHERE id = ?", *fields.values(), interview_id)
+
+
+def get(interview_id: str) -> sqlite3.Row | None:
+    return one("SELECT * FROM interviews WHERE id = ?", interview_id)
+
+
+def save_card(interview_id: str, card: dict, attempts: int, seconds: float) -> None:
+    update(interview_id, status="ready", card_json=json.dumps(card, ensure_ascii=False), score=card["overall_score"],
+           recommendation=card["recommendation"], attempts=attempts, error=None, generated_in_s=round(seconds, 1))
+
+
+def seed_samples() -> int:
+    """Load the committed simulated candidates (app/seed/samples.json). Idempotent. Returns how many are present."""
+    if not cfg.SEED_FILE.exists():
+        return 0
+    data = json.loads(cfg.SEED_FILE.read_text(encoding="utf-8"))
+    for s in data.get("samples", []):
+        if s.get("label") != cfg.SAMPLE_LABEL:  # refuse to load anything not labelled as simulated
+            raise ValueError(f"sample {s.get('id')} is not labelled {cfg.SAMPLE_LABEL!r}")
+        card = s["card"]
+        run("INSERT OR REPLACE INTO interviews (id, kind, role_id, candidate_name, label, sample_kind, status, created_at, ended_at, "
+            "duration_s, ended_reason, has_recording, turns_json, card_json, score, recommendation, attempts, generated_in_s, updated_at) "
+            "VALUES (?, 'sample', ?, ?, ?, ?, 'ready', ?, ?, ?, ?, 0, ?, ?, ?, ?, 1, ?, ?)",
+            s["id"], s.get("role_id", cfg.LIVE_ROLE_ID), s["candidate_name"], cfg.SAMPLE_LABEL, s["sample_kind"],
+            s.get("created_at", 0), s.get("created_at", 0), s.get("duration_s"), "simulated",
+            json.dumps(s["turns"], ensure_ascii=False), json.dumps(card, ensure_ascii=False), card["overall_score"],
+            card["recommendation"], s.get("generated_in_s"), time.time())
+    return len(data.get("samples", []))

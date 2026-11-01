@@ -1,0 +1,68 @@
+@import "tailwindcss";
+
+/* Palette: warm paper, deep navy text, one restrained teal accent. Every text/background pair below is >= 4.5:1 (AA):
+   ink #16233b on paper #f7f3ea ~ 14:1 | muted #4f5d75 on paper ~ 5.6:1 | teal #0f766e on paper ~ 5.0:1 | teal on white ~ 5.5:1 */
+@theme {
+  --color-paper: #f7f3ea;
+  --color-paper-2: #efe9dc;
+  --color-navy-950: #0a1830;
+  --color-navy-900: #0f2442;
+  --color-navy-800: #17325a;
+  --color-navy-700: #234477;
+  --color-navy-100: #e3e9f3;
+  --color-navy-50: #efe9dc;
+  --color-accent: #0f766e;
+  --color-accent-soft: #dcefe9;
+  --color-ink: #16233b;
+  --color-muted: #4f5d75;
+  --color-line: #d8d0bd;
+  --color-warn: #7a4e00;
+  --color-warn-soft: #fff1cf;
+  --color-bad: #a3262a;
+  --color-bad-soft: #fbe5e3;
+  --color-good: #17693a;
+  --color-good-soft: #e0f2e6;
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+}
+
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--color-paper); color: var(--color-ink); font-family: var(--font-sans); overflow-x: hidden; }
+h1, .serif { font-family: var(--font-serif); letter-spacing: -0.01em; }
+:focus-visible { outline: 3px solid var(--color-accent); outline-offset: 2px; border-radius: 4px; }
+button { cursor: pointer; }
+button:disabled { cursor: not-allowed; }
+dialog::backdrop { background: rgba(15, 36, 66, 0.45); }
+
+/* ---- the ring: quiet, one element, state shown by colour + shape + glyph (and always repeated in text) ---------------------------------- */
+.state-ring { --lvl: 0; --size: 120px; position: relative; width: var(--size); height: var(--size); display: grid; place-items: center; color: var(--color-navy-900); }
+.state-ring::before { content: ""; position: absolute; inset: 0; border-radius: 9999px; border: 2px solid currentColor; background: #fff; transition: color .3s; }
+.state-ring::after { content: ""; position: absolute; inset: -12px; border-radius: 9999px; border: 1px solid currentColor;
+  opacity: calc(0.14 + var(--lvl) * 0.55); transform: scale(calc(1 + var(--lvl) * 0.1)); transition: transform 90ms linear, color .3s; }
+.state-ring svg { position: relative; width: 38%; height: 38%; z-index: 1; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.state-ring[data-state="speaking"] { color: var(--color-accent); }
+.state-ring[data-state="listening"] { color: var(--color-navy-900); }
+.state-ring[data-state="thinking"] { color: var(--color-navy-700); }
+.state-ring[data-state="thinking"]::before { border-style: dashed; animation: spin 18s linear infinite; }
+.state-ring[data-state="muted"] { color: var(--color-muted); }
+.state-ring[data-state="muted"]::before { border-style: dotted; }
+.state-ring[data-state="muted"]::after { opacity: .1; transform: none; }
+.eq rect { transform-box: fill-box; transform-origin: center bottom; fill: currentColor; stroke: none; animation: eq 1.1s ease-in-out infinite; }
+.eq rect:nth-child(2) { animation-delay: -.3s } .eq rect:nth-child(3) { animation-delay: -.6s } .eq rect:nth-child(4) { animation-delay: -.9s }
+.dots circle { fill: currentColor; stroke: none; animation: dot 1.4s ease-in-out infinite; }
+.dots circle:nth-child(2) { animation-delay: .2s } .dots circle:nth-child(3) { animation-delay: .4s }
+.rec-dot { width: 9px; height: 9px; border-radius: 9999px; background: var(--color-bad); animation: blink 2s ease-in-out infinite; }
+.fade-in { animation: fade .45s ease both; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes eq { 0%, 100% { transform: scaleY(.35); } 50% { transform: scaleY(1); } }
+@keyframes dot { 0%, 100% { opacity: .25; } 50% { opacity: 1; } }
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: .55; } }
+@keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .state-ring::before, .state-ring::after, .eq rect, .dots circle, .rec-dot, .fade-in { animation: none !important; transition: none !important; }
+  .state-ring::after { transform: none; }
+  .eq rect { transform: scaleY(.7); }
+}

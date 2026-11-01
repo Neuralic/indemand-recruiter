@@ -1,0 +1,100 @@
+# =====================================================================================================================
+# Role #5905 - Electrical Engineering Supervisor (Edmonton, AB).
+# SOURCE: roles/raw/5905.txt (the posting dated October 14, 2026) - and ONLY that text. Nothing here is guessed.
+# NOT STATED IN THE POSTING (left blank on purpose; the agent answers "Stefanie will confirm that" and flags it):
+#   compensation, benefits.  The client is unnamed in the posting: never guess or name it.
+# Spoken text rules (CLAUDE.md §14 + David 2026-10-24): say "professional engineer", "programmable logic controller",
+# "motor control centre", "variable frequency drive", "engineers-in-training" in full; APEGA stays a word; no markup or tags.
+# =====================================================================================================================
+id: "5905"
+title: "Electrical Engineering Supervisor"
+location: "Edmonton, AB, Canada"
+country: "Canada"
+ontario: false
+placeholder: false
+source: "roles/raw/5905.txt"
+
+summary: "A full-time, permanent Electrical Engineering Supervisor in Edmonton, Alberta, leading a multidisciplinary team of electrical engineers, engineers-in-training, programmers and electrical designers at an established engineering organization specializing in industrial electrical systems, automation and project execution."
+selling_points:
+  - "Combines hands-on engineering, people leadership and project management in a collaborative industrial engineering environment."
+  - "Take ownership of engineering quality and team performance while staying involved in technical project execution."
+  - "Mentor developing engineers and contribute to complex industrial electrical and automation projects."
+
+# Facts the agent may state to a candidate. Each value is the sentence that gets spoken. Blank = NOT in the posting.
+facts_for_candidate_questions:
+  reporting_to: "The role reports directly to the Operations Manager."
+  schedule: "It's a full-time, permanent position. There is some travel to industrial project sites, estimated at up to twenty percent of working time, and site assignments aren't expected to exceed two consecutive weeks. There may occasionally be some flexibility needed outside regular business hours for project deadlines, commissioning and urgent technical issues."
+  compensation: ""
+  benefits: ""
+  location: "The role is based in Edmonton, Alberta."
+  client: "I can tell you the client is an established engineering organization specializing in industrial electrical systems, automation and project execution. Stefanie will confirm anything beyond that."
+  responsibilities: "In short, you'd lead a multidisciplinary team of electrical engineers, engineers-in-training, programmers and electrical designers, provide technical oversight, act as the responsible professional engineer for stamping under APEGA, and support project delivery from design through commissioning."
+
+script:
+  rapport_question: "What's prompting you to look at a move right now, and what are you hoping this next role gives you?"
+  background_question: "Could you give me a quick two-minute snapshot of your career so far, and what you're doing today?"   # no CV on file
+  candidate_questions_prompt: "Before we wrap up, what questions do you have for me about the role or the process?"
+  more_questions_prompt: "Anything else you'd like to ask?"
+
+competencies:
+  - id: technical_electrical
+    name: "Industrial electrical power systems"
+    primary_question: "Tell me about the industrial electrical power systems you've been responsible for, things like three-phase distribution, motor control centres, variable frequency drives, and grounding and bonding. What was your role?"
+    short_question: "Tell me about the industrial electrical power systems you've been responsible for, and what your role was."   # spoken when a question must be repeated mid-interview (never the full read)
+    probe_if_vague: "Could you pick one specific system or design you worked on, and walk me through what you personally decided and how it turned out?"
+    strong_signals: ["names a specific system or design", "covers three-phase distribution, motor control centres, variable frequency drives, grounding and bonding", "describes their own decisions and the outcome"]
+    weak_signals: ["generic statements about electrical systems", "only 'we', no personal contribution", "no concrete example"]
+    weight: 0.25
+  - id: controls_automation
+    name: "Controls, automation and instrumentation"
+    primary_question: "How much hands-on experience do you have with programmable logic controllers, human-machine interfaces and industrial instrumentation, and what part have you played on those projects?"
+    short_question: "How much hands-on experience do you have with programmable logic controllers, human-machine interfaces and industrial instrumentation?"   # spoken when a question must be repeated mid-interview (never the full read)
+    probe_if_vague: "Can you walk me through one specific controls project, what you personally did on it, and what the result was?"
+    strong_signals: ["names programmable logic controller and human-machine interface platforms or work", "instrumentation and control systems experience", "personal role and a result"]
+    weak_signals: ["only supervised others with no technical depth", "no specific project"]
+    weight: 0.15
+  - id: hazardous_locations_codes
+    name: "Hazardous locations and codes"
+    primary_question: "Tell me about your experience with hazardous location electrical work, and which codes and standards you've applied, such as the Canadian Electrical Code, the National Electrical Code, or the API classification standards."
+    short_question: "Tell me about your hazardous location electrical work, and the codes and standards you've applied."   # spoken when a question must be repeated mid-interview (never the full read)
+    probe_if_vague: "Could you walk me through one specific hazardous location project and how you applied the code on it?"
+    strong_signals: ["a specific hazardous location project", "names the Canadian Electrical Code, National Electrical Code or API 500 and 505 correctly", "explains area classification decisions"]
+    weak_signals: ["only says they follow the code", "no project example"]
+    weight: 0.15
+  - id: pe_stamping
+    name: "Professional engineer review and stamping"
+    primary_question: "Tell me about your experience reviewing, authenticating and stamping electrical drawings and deliverables as a professional engineer under APEGA."
+    short_question: "Tell me about your experience reviewing and stamping electrical drawings as a professional engineer under APEGA."   # spoken when a question must be repeated mid-interview (never the full read)
+    probe_if_vague: "Can you describe one specific set of drawings you reviewed and stamped, and what you checked before you stamped them?"
+    strong_signals: ["is the responsible professional engineer on deliverables", "describes a review process", "knows APEGA authentication requirements"]
+    weak_signals: ["has not stamped drawings", "vague about the review process"]
+    weight: 0.15
+  - id: team_leadership
+    name: "Leading engineers, engineers-in-training, programmers and designers"
+    primary_question: "Tell me about the team you've led, engineers, engineers-in-training, programmers or designers, and how you've mentored them and handled their performance."
+    short_question: "Tell me about the team you've led, and how you've mentored them."   # spoken when a question must be repeated mid-interview (never the full read)
+    probe_if_vague: "Can you share one specific situation with someone on your team, what you did, and how it worked out?"
+    strong_signals: ["team size and roles named", "a mentoring or performance example", "outcome for the person or the team"]
+    weak_signals: ["abstract management philosophy only", "no example"]
+    weight: 0.20
+  - id: project_delivery
+    name: "Project estimating, scheduling, clients and commissioning"
+    primary_question: "Tell me about a project you took from estimate through to commissioning, and how you kept it on schedule and on budget while working with the client."
+    short_question: "Tell me about a project you took from estimate through to commissioning."   # spoken when a question must be repeated mid-interview (never the full read)
+    probe_if_vague: "Could you walk me through one specific project, what you personally owned, and how it landed against schedule and budget?"
+    strong_signals: ["estimate, budget and schedule numbers", "client and contractor coordination", "commissioning and lessons learned"]
+    weak_signals: ["no numbers", "credit shared without their own role"]
+    weight: 0.10
+
+# Asked in this order, one at a time, after the competencies. `required: true` => the stage gate will not leave logistics until recorded.
+# The first four are the posting's hard requirements (knock-outs); location, salary and notice are logistics (informational).
+knockouts:
+  - { id: work_auth, required: true, question: "Are you legally eligible to work in Canada?", fail_if: "no" }
+  - { id: pe_apega, required: true, question: "Do you hold a professional engineer designation in good standing with APEGA?", fail_if: "no. Being eligible, in progress, or registered with another body is not enough" }
+  - { id: degree, required: true, question: "Do you have a bachelor's degree in electrical engineering?", fail_if: "no" }
+  - { id: travel, required: true, short_question: "Does travel up to about twenty percent of your working time work for you?", question: "This role involves some travel to industrial project sites, up to about twenty percent of your working time, with site assignments usually not longer than two consecutive weeks. Does that work for you?", fail_if: "no" }
+  - { id: location, required: false, question: "This role is based in Edmonton. Are you based there now, or would you be relocating?", fail_if: "" }
+  - { id: salary, required: false, question: "What salary range are you targeting for a move like this?", fail_if: "" }
+  - { id: notice_period, required: false, question: "And what notice period would you need to give your current employer?", fail_if: "" }
+
+domain_terms: ["APEGA", "P.Eng", "EIT", "PLC", "HMI", "MCC", "VFD", "instrumentation", "grounding and bonding", "hazardous locations", "Canadian Electrical Code", "National Electrical Code", "API 500", "API 505", "commissioning", "three-phase"]

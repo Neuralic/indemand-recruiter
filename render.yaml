@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: indemand-ai-recruiter
+    runtime: docker
+    plan: free
+    healthCheckPath: /healthz
+    autoDeploy: true
+    envVars:
+      - key: ACCESS_TOKEN        # unguessable; goes in the shared link as ?k=
+        sync: false
+      - key: VAPI_PUBLIC_KEY
+        sync: false
+      - key: VAPI_PRIVATE_KEY
+        sync: false
+      - key: VAPI_ASSISTANT_ID
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: ANTHROPIC_MODEL
+        value: claude-sonnet-5-5
+      - key: MAX_CONCURRENT_SESSIONS
+        value: "1"
+      - key: DAILY_SESSION_CAP
+        value: "20"
+      - key: KILL_SWITCH
+        value: "0"

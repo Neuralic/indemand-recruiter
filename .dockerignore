@@ -1,0 +1,14 @@
+.git
+.env
+.env.*
+.venv-app
+spike
+server
+data
+web/node_modules
+web/dist
+**/__pycache__
+**/*.pyc
+roles/raw
+bot/tests
+app/tests
