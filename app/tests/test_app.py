@@ -319,3 +319,28 @@ def test_unusable_call_with_no_customer_audio_says_so(client):
     assert d["status"] == "unusable" and "VPN" in d["message"] and "microphone" in d["message"]
     store.update(CALL_ID, ended_reason="customer-ended-call")
     assert "enough of a conversation" in client.get(f"/api/interviews/{CALL_ID}/scorecard", headers=H).json()["message"]
+
+
+def test_clean_avery_strips_tool_call_text_and_marker():
+    from app import seed_samples as ss
+    assert ss.clean_avery("endCall\n```") == ("", False)
+    assert ss.clean_avery('{"name":"endCall","arguments":{}}\n```') == ("", False)
+    assert ss.clean_avery('{"tool":"endCall"} ```') == ("", False)
+    assert ss.clean_avery("Thank you, Alex. Take care. " + ss.END_MARK) == ("Thank you, Alex. Take care.", True)
+    assert ss.clean_avery("Do you have any questions?") == ("Do you have any questions?", False)
+
+
+def test_dashboard_names_live_session_and_caps_unscored_rows(client):
+    for i in range(5):
+        cid = f"0000000{i}-aaaa-bbbb-cccc-111122223333"
+        store.create_live(cid)
+        store.update(cid, status="unusable", created_at=1000.0 + i)
+    store.create_live(CALL_ID)
+    store.update(CALL_ID, status="ready", card_json=json.dumps(scorecard.assemble(good_output(), ROLE, TURNS, {}, "Live demo session")), score=80, recommendation="Submit")
+    rows = client.get("/api/dashboard", headers=H).json()["candidates"]
+    live = [r for r in rows if not r["is_sample"]]
+    assert [r["candidate_name"] for r in live] == ["Your interview"] * 3  # 1 scored + only 2 of the 5 unscored
+    scored = [r for r in rows if r["rank"] is not None]
+    assert CALL_ID in [r["id"] for r in scored] and [r["rank"] for r in scored] == list(range(1, len(scored) + 1))
+    assert all(r["score"] is None for r in rows if r["rank"] is None)
+    assert {r["label"] for r in live} == {"Live demo session"}

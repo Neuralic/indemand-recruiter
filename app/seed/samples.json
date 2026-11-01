@@ -1,0 +1,1435 @@
+{
+ "note": "Simulated candidates. Transcripts written by Claude playing Avery and a fictional persona. No real people.",
+ "samples": [
+  {
+   "id": "sample-strong",
+   "role_id": "5905",
+   "candidate_name": "Alex Morgan",
+   "label": "Sample candidate (simulated)",
+   "sample_kind": "strong",
+   "turns": [
+    {
+     "speaker": "interviewer",
+     "text": "Hi, I'm Avery, IN DEMAND's AI screening assistant. This is a short first conversation, about ten to fifteen minutes, about the Electrical Engineering Supervisor role in Edmonton. It's recorded so Stefanie's team can review it personally. AI assists the screening, but it doesn't replace human judgment, and you can ask to speak with a person at any time. Shall we start?",
+     "t_start": 3.0,
+     "t_end": 25.6
+    },
+    {
+     "speaker": "candidate",
+     "text": "Hi Avery, thanks, and yes, let's get started. I appreciate you letting me know it's recorded and that a person reviews it. Just so you have the quick picture, I'm a senior electrical engineer with 14 years in industrial work, a P.Eng. with APEGA for nine years, and I currently lead a team of five at an oil and gas processing facility. I'm looking to move into formal people leadership with more project ownership, so this role caught my eye.",
+     "t_start": 26.5,
+     "t_end": 59.8
+    },
+    {
+     "speaker": "interviewer",
+     "text": "That makes sense. You've already covered what's prompting the move, so I'll go straight to your current role. Could you give me a quick snapshot of the scope you own there, including the kinds of systems and projects your team handles?",
+     "t_start": 61.2,
+     "t_end": 76.4
+    },
+    {
+     "speaker": "candidate",
+     "text": "Sure. I lead a team of five, three engineers, an engineer-in-training and a designer, covering electrical design and project support for the processing facility. That includes 600-volt motor control centres and variable frequency drives, PLC and control upgrades, and Class I Division 2 area classification reviews under the Canadian Electrical Code and API 500 and 505. On the project side, I redesigned an MCC lineup and VFD upgrade for a gas plant that saved three weeks of a six-week shutdown and finished 4 percent under a 1.8 million dollar budget. I also led a PLC migration on a compressor station, where I wrote the commissioning plan myself. On the quality side, I stamp about 40 drawing sets a year and personally review each one before it goes out.",
+     "t_start": 77.3,
+     "t_end": 130.6
+    },
+    {
+     "speaker": "interviewer",
+     "text": "Okay, the MCC and VFD redesign sounds like a solid result. You've covered a lot of ground there, so I'll pick up with grounding and bonding. What was your part in grounding and bonding design on those power systems?",
+     "t_start": 132.0,
+     "t_end": 146.5
+    },
+    {
+     "speaker": "candidate",
+     "text": "On the MCC and VFD work, grounding and bonding was part of the design package, and I was responsible for it under the Canadian Electrical Code. That covered the equipment bonding and ground bus arrangement in the lineup, and proper grounding and shielding for the VFD output cabling. Because I review and stamp the drawing sets personally, I checked those details against the code before anything went out. I don't want to overstate it, though. The stories I've told you are the ones where I owned the overall design, not a standalone grounding study. If this role leans heavily on something like a ground grid design, I'd like to hear how much of that it involves.",
+     "t_start": 147.4,
+     "t_end": 195.7
+    },
+    {
+     "speaker": "interviewer",
+     "text": "That's a good one for Stefanie. She'll confirm it with you. Now, on the hands-on side, what has your direct involvement been with programmable logic controllers, HMIs, and instrumentation and controls?",
+     "t_start": 197.1,
+     "t_end": 208.6
+    },
+    {
+     "speaker": "candidate",
+     "text": "On the PLC side, my most direct work was the migration on a compressor station, where I wrote the commissioning plan myself and was involved through startup. HMI and instrumentation work has mostly come through that kind of project, where I handled the electrical and controls design and reviewed the I/O and drawings, while my team and the controls specialists handled a good deal of the detailed programming. So I'm hands-on enough to lead the scope, review it critically, and sign off on it, but I'd describe myself as a design and project lead on controls rather than a full-time programmer. Could you tell me whether this role expects hands-on programming, or more oversight of controls scope?",
+     "t_start": 209.5,
+     "t_end": 258.3
+    },
+    {
+     "speaker": "interviewer",
+     "text": "Of course, we'll make time for your questions at the end. Can you tell me about a time you developed an engineer-in-training, programmer or designer on your team?",
+     "t_start": 259.7,
+     "t_end": 270.0
+    },
+    {
+     "speaker": "candidate",
+     "text": "Yes, two examples. I mentored an engineer-in-training through her P.Eng. application with APEGA. I helped her line up project experience that matched the competency areas, reviewed her write-ups, and ran practice sessions before her interview, and she passed on her first attempt. The second was a designer who was underperforming on drawing quality and turnaround. I sat down with him, wrote a plan with specific expectations and weekly check-ins, and he improved within about two months. In both cases, what mattered most was being clear on expectations and following up consistently.",
+     "t_start": 270.9,
+     "t_end": 308.8
+    },
+    {
+     "speaker": "interviewer",
+     "text": "That makes sense. Can you tell me about a project you took from estimate or proposal through to commissioning, and what you owned along the way?",
+     "t_start": 310.2,
+     "t_end": 319.9
+    },
+    {
+     "speaker": "candidate",
+     "text": "The best example is the MCC lineup and VFD upgrade at the gas plant. I developed the design approach and the scope, and I worked out a shutdown sequence that cut three weeks from a six-week window. I personally reviewed and stamped the drawing sets, coordinated with construction and operations on the outage plan, and followed the work through commissioning. We finished 4 percent under the 1.8 million dollar budget. I'll be upfront that the original cost estimate was built with input from our project controls group, so I owned the technical basis and the budget performance, but I wasn't the sole author of the estimate. Does this role have supervisors owning the estimate and proposal stage, or does that sit with a project manager?",
+     "t_start": 320.8,
+     "t_end": 372.9
+    },
+    {
+     "speaker": "interviewer",
+     "text": "That makes sense, and I'll note your questions on the estimate stage and on programming for the end. Are you legally eligible to work in Canada?",
+     "t_start": 374.3,
+     "t_end": 383.9
+    },
+    {
+     "speaker": "candidate",
+     "text": "Yes, I'm a Canadian citizen, so I'm fully eligible to work in Canada with no sponsorship needed. I'm also based in Edmonton and not looking to relocate.",
+     "t_start": 384.8,
+     "t_end": 396.0
+    },
+    {
+     "speaker": "interviewer",
+     "text": "Okay, that's clear. You already mentioned your APEGA registration, so I'll move on. Do you hold a bachelor's degree in electrical engineering?",
+     "t_start": 397.4,
+     "t_end": 405.6
+    },
+    {
+     "speaker": "candidate",
+     "text": "Yes, I hold a bachelor's degree in electrical engineering from a Canadian university. That's also the foundation for my P.Eng. with APEGA, which has been in good standing for nine years.",
+     "t_start": 406.5,
+     "t_end": 419.4
+    },
+    {
+     "speaker": "interviewer",
+     "text": "Good. The role involves up to twenty percent travel, with site stays of up to two weeks. Does that work for you?",
+     "t_start": 420.8,
+     "t_end": 428.9
+    },
+    {
+     "speaker": "candidate",
+     "text": "Yes, that works for me. Up to 20 percent travel is fine, and site stays of up to two weeks are workable too. I'm based in Edmonton, so I'd just plan ahead with my family and team for the longer stretches. Is the travel mostly to client sites, and is it spread fairly evenly through the year or concentrated around project milestones?",
+     "t_start": 429.8,
+     "t_end": 455.7
+    },
+    {
+     "speaker": "interviewer",
+     "text": "Okay, I'll add the travel question to your list for the end. You've mentioned you're based in Edmonton, so what are your salary expectations for a role like this?",
+     "t_start": 457.1,
+     "t_end": 467.8
+    },
+    {
+     "speaker": "candidate",
+     "text": "I'm expecting a base salary in the range of 165 to 180 thousand dollars for a role like this. I'm open to discussing it once I understand the full scope, the bonus structure, and the benefits. Could you tell me what pay band has been set for the position?",
+     "t_start": 468.7,
+     "t_end": 489.1
+    },
+    {
+     "speaker": "interviewer",
+     "text": "Noted, thank you. Compensation details aren't something I have, so that's a good one for Stefanie. She'll confirm it with you. What notice period would you need to give your current employer?",
+     "t_start": 490.5,
+     "t_end": 502.4
+    },
+    {
+     "speaker": "candidate",
+     "text": "I'd need to give four weeks' notice to my current employer. I'd want to use that time for a clean handover, particularly for the projects my team has in flight, so I leave them in good shape. If there's a specific start date you're working toward, I'm happy to talk through how that lines up.",
+     "t_start": 503.3,
+     "t_end": 526.2
+    },
+    {
+     "speaker": "interviewer",
+     "text": "That makes sense. I don't have a target start date, so that's a good one for Stefanie. She'll confirm it with you. What questions do you have for me about the role?",
+     "t_start": 527.6,
+     "t_end": 539.5
+    },
+    {
+     "speaker": "candidate",
+     "text": "Thanks, Avery. I've raised a few along the way, so to pull them together for Stefanie: who the client is, and what the pay band is for the role. I'd also like to know whether the supervisor owns the estimate and proposal stage or whether that sits with a project manager, and how much hands-on PLC programming is expected versus oversight of controls scope. Last, if grounding design like ground grids is a big part of the work, I'd like to understand how much. For next steps, what should I expect on timing after Stefanie's team reviews this?",
+     "t_start": 540.4,
+     "t_end": 581.2
+    },
+    {
+     "speaker": "interviewer",
+     "text": "The client's name isn't shared, and the pay band, who owns the estimate stage, how much hands-on programming is expected, the ground grid work, and the timing after review are all good ones for Stefanie. She'll confirm them with you. Travel is to industrial project sites, but how it's spread through the year is hers to confirm too. Do you have any other questions for me?",
+     "t_start": 582.6,
+     "t_end": 607.0
+    },
+    {
+     "speaker": "candidate",
+     "text": "No, that covers everything for now, Avery. Thanks for walking me through it. I'm looking forward to hearing from Stefanie, and I'm happy to follow up with anything else her team needs, like references or more detail on any of the projects we discussed.",
+     "t_start": 607.9,
+     "t_end": 626.3
+    },
+    {
+     "speaker": "interviewer",
+     "text": "Thank you for your time today. Stefanie's team will review everything personally and be in touch. Take care.",
+     "t_start": 627.7,
+     "t_end": 634.3
+    }
+   ],
+   "card": {
+    "overall_score": 84,
+    "recommendation": "Submit",
+    "recommendation_note": "",
+    "headline": "Edmonton-based P.Eng. (APEGA, 9 years) leading a team of five at an oil and gas facility, with strong MCC/VFD project results and stamping experience; hands-on PLC programming and ground grid depth are the gaps.",
+    "label": "Sample candidate (simulated)",
+    "summary_label": "AI-assisted summary for human review",
+    "competencies": [
+     {
+      "id": "technical_electrical",
+      "name": "Industrial electrical power systems",
+      "weight": 0.25,
+      "score": 4,
+      "confidence": "high",
+      "evidence": [
+       {
+        "quote": "That includes 600-volt motor control centres and variable frequency drives, PLC and control upgrades",
+        "t": 77.3,
+        "verified": true
+       },
+       {
+        "quote": "I redesigned an MCC lineup and VFD upgrade for a gas plant that saved three weeks of a six-week shutdown",
+        "t": 77.3,
+        "verified": true
+       }
+      ],
+      "rationale": "Names specific systems and a project with measurable schedule and budget results, and describes personal ownership of grounding and bonding within the design. They said they have not done a standalone grounding study.",
+      "evidence_note": ""
+     },
+     {
+      "id": "controls_automation",
+      "name": "Controls, automation and instrumentation",
+      "weight": 0.15,
+      "score": 3,
+      "confidence": "med",
+      "evidence": [
+       {
+        "quote": "I'd describe myself as a design and project lead on controls rather than a full-time programmer",
+        "t": 209.5,
+        "verified": true
+       },
+       {
+        "quote": "my most direct work was the migration on a compressor station, where I wrote the commissioning plan myself",
+        "t": 209.5,
+        "verified": true
+       }
+      ],
+      "rationale": "Has a specific PLC migration with a personal role in commissioning and startup. Detailed programming and HMI work was done by others, so hands-on depth is limited.",
+      "evidence_note": ""
+     },
+     {
+      "id": "hazardous_locations_codes",
+      "name": "Hazardous locations and codes",
+      "weight": 0.15,
+      "score": 4,
+      "confidence": "med",
+      "evidence": [
+       {
+        "quote": "Class I Division 2 area classification reviews under the Canadian Electrical Code and API 500 and 505",
+        "t": 77.3,
+        "verified": true
+       }
+      ],
+      "rationale": "Correctly names the Canadian Electrical Code and API 500/505 and area classification reviews. No detailed classification decision or specific hazardous location project was described.",
+      "evidence_note": ""
+     },
+     {
+      "id": "pe_stamping",
+      "name": "Professional engineer review and stamping",
+      "weight": 0.15,
+      "score": 5,
+      "confidence": "high",
+      "evidence": [
+       {
+        "quote": "I stamp about 40 drawing sets a year and personally review each one before it goes out",
+        "t": 77.3,
+        "verified": true
+       },
+       {
+        "quote": "I personally reviewed and stamped the drawing sets",
+        "t": 320.8,
+        "verified": true
+       }
+      ],
+      "rationale": "Actively stamps about 40 drawing sets a year, personally reviews each one, and holds APEGA P.Eng. status for nine years. Authentication requirements were not discussed in detail.",
+      "evidence_note": ""
+     },
+     {
+      "id": "team_leadership",
+      "name": "Leading engineers, engineers-in-training, programmers and designers",
+      "weight": 0.2,
+      "score": 4,
+      "confidence": "high",
+      "evidence": [
+       {
+        "quote": "I lead a team of five, three engineers, an engineer-in-training and a designer",
+        "t": 77.3,
+        "verified": true
+       },
+       {
+        "quote": "I mentored an engineer-in-training through her P.Eng. application with APEGA",
+        "t": 270.9,
+        "verified": true
+       }
+      ],
+      "rationale": "Names team size and roles and gives two mentoring examples with outcomes (a first-attempt P.Eng. pass and a designer who improved within about two months). Mostly peer-level team lead, not a formal supervisor.",
+      "evidence_note": ""
+     },
+     {
+      "id": "project_delivery",
+      "name": "Project estimating, scheduling, clients and commissioning",
+      "weight": 0.1,
+      "score": 4,
+      "confidence": "high",
+      "evidence": [
+       {
+        "quote": "We finished 4 percent under the 1.8 million dollar budget",
+        "t": 320.8,
+        "verified": true
+       },
+       {
+        "quote": "I owned the technical basis and the budget performance, but I wasn't the sole author of the estimate",
+        "t": 320.8,
+        "verified": true
+       }
+      ],
+      "rationale": "Gives concrete budget and schedule numbers, coordination with construction and operations, and commissioning follow-through. Was candid that estimating was shared with project controls.",
+      "evidence_note": ""
+     }
+    ],
+    "knockouts": [
+     {
+      "id": "work_auth",
+      "question": "Are you legally eligible to work in Canada?",
+      "required": true,
+      "status": "pass",
+      "answer": "Eligible to work in Canada",
+      "quote": "I'm fully eligible to work in Canada with no sponsorship needed",
+      "quote_verified": true,
+      "t": 384.8,
+      "note": ""
+     },
+     {
+      "id": "pe_apega",
+      "question": "Do you hold a professional engineer designation in good standing with APEGA?",
+      "required": true,
+      "status": "pass",
+      "answer": "Holds P.Eng. with APEGA, in good standing for nine years",
+      "quote": "which has been in good standing for nine years",
+      "quote_verified": true,
+      "t": 406.5,
+      "note": ""
+     },
+     {
+      "id": "degree",
+      "question": "Do you have a bachelor's degree in electrical engineering?",
+      "required": true,
+      "status": "pass",
+      "answer": "Bachelor's degree in electrical engineering from a Canadian university",
+      "quote": "Yes, I hold a bachelor's degree in electrical engineering from a Canadian university",
+      "quote_verified": true,
+      "t": 406.5,
+      "note": ""
+     },
+     {
+      "id": "travel",
+      "question": "This role involves some travel to industrial project sites, up to about twenty percent of your working time, with site assignments usually not longer than two consecutive weeks. Does that work for you?",
+      "required": true,
+      "status": "pass",
+      "answer": "Fine with up to 20% travel and site stays of up to two weeks",
+      "quote": "Up to 20 percent travel is fine, and site stays of up to two weeks are workable too",
+      "quote_verified": true,
+      "t": 429.8,
+      "note": ""
+     },
+     {
+      "id": "location",
+      "question": "This role is based in Edmonton. Are you based there now, or would you be relocating?",
+      "required": false,
+      "status": "pass",
+      "answer": "Based in Edmonton, not looking to relocate",
+      "quote": "I'm also based in Edmonton and not looking to relocate",
+      "quote_verified": true,
+      "t": 384.8,
+      "note": ""
+     },
+     {
+      "id": "salary",
+      "question": "What salary range are you targeting for a move like this?",
+      "required": false,
+      "status": "pass",
+      "answer": "Base of $165-180K, open to discussing once scope, bonus and benefits are clear",
+      "quote": "I'm expecting a base salary in the range of 165 to 180 thousand dollars for a role like this",
+      "quote_verified": true,
+      "t": 468.7,
+      "note": ""
+     },
+     {
+      "id": "notice_period",
+      "question": "And what notice period would you need to give your current employer?",
+      "required": false,
+      "status": "pass",
+      "answer": "Four weeks' notice",
+      "quote": "I'd need to give four weeks' notice to my current employer",
+      "quote_verified": true,
+      "t": 503.3,
+      "note": ""
+     }
+    ],
+    "knockouts_required_passed": 4,
+    "knockouts_required": 4,
+    "strengths": [
+     "All required knock-outs pass, including APEGA P.Eng. in good standing and an electrical engineering degree",
+     "Specific MCC/VFD project: 3 weeks saved on a 6-week shutdown and 4% under a $1.8M budget",
+     "Stamps about 40 drawing sets a year with personal review of each",
+     "Local to Edmonton with a short notice period and two concrete mentoring examples"
+    ],
+    "risks": [
+     "Hands-on PLC/HMI programming is limited; the candidate describes themselves as a design and project lead on controls",
+     "No standalone ground grid or grounding study experience",
+     "Estimating was shared with a project controls group, not solely owned",
+     "Current role is a team lead of five; formal supervisor experience is not yet confirmed, and the candidate says they want to move into formal people leadership"
+    ],
+    "verify_on_call": [
+     "Confirm the candidate's formal reporting authority and people-management scope, including performance reviews, hiring and any direct reports",
+     "Probe depth on controls: PLC and HMI platforms used and the extent of their personal programming or I/O work",
+     "Confirm the APEGA registration number and good standing, and check the salary expectation of $165-180K against the budget"
+    ],
+    "candidate_questions_to_answer": [
+     "Who is the client?",
+     "What is the pay band for the role?",
+     "Does the supervisor own the estimate and proposal stage, or does a project manager?",
+     "How much hands-on PLC programming is expected versus oversight of controls scope?",
+     "How much ground grid design is involved in the work?",
+     "Is travel mostly to client sites, and is it spread evenly through the year or concentrated around project milestones?"
+    ],
+    "logistics": {
+     "salary": {
+      "answer": "Base of $165-180K, open to discussing once scope, bonus and benefits are clear",
+      "quote": "I'm expecting a base salary in the range of 165 to 180 thousand dollars for a role like this",
+      "status": "pass"
+     },
+     "notice_period": {
+      "answer": "Four weeks' notice",
+      "quote": "I'd need to give four weeks' notice to my current employer",
+      "status": "pass"
+     },
+     "location": {
+      "answer": "Based in Edmonton, not looking to relocate",
+      "quote": "I'm also based in Edmonton and not looking to relocate",
+      "status": "pass"
+     },
+     "travel": {
+      "answer": "Fine with up to 20% travel and site stays of up to two weeks",
+      "quote": "Up to 20 percent travel is fine, and site stays of up to two weeks are workable too",
+      "status": "pass"
+     }
+    },
+    "not_in_posting": [
+     "compensation",
+     "benefits",
+     "the client's name"
+    ],
+    "quote_check": {
+     "proposed": 18,
+     "dropped": 0
+    },
+    "versions": {
+     "scorecard_model": "claude-sonnet-5-5",
+     "scorecard_prompt": "scorecard-claude-v2"
+    },
+    "generated_at": 1793553262.9449005
+   },
+   "created_at": 1793553262,
+   "duration_s": 634.3,
+   "generated_in_s": 20.1
+  },
+  {
+   "id": "sample-borderline",
+   "role_id": "5905",
+   "candidate_name": "Jordan Ellis",
+   "label": "Sample candidate (simulated)",
+   "sample_kind": "borderline",
+   "turns": [
+    {
+     "speaker": "interviewer",
+     "text": "Hi, I'm Avery, IN DEMAND's AI screening assistant. This is a short first conversation, about ten to fifteen minutes, about the Electrical Engineering Supervisor role in Edmonton. It's recorded so Stefanie's team can review it personally. AI assists the screening, but it doesn't replace human judgment, and you can ask to speak with a person at any time. Shall we start?",
+     "t_start": 3.0,
+     "t_end": 25.6
+    },
+    {
+     "speaker": "candidate",
+     "text": "Yes, that sounds good, thanks Avery. I'm happy to get started whenever you are.",
+     "t_start": 26.5,
+     "t_end": 32.3
+    },
+    {
+     "speaker": "interviewer",
+     "text": "Great. What's prompting you to consider a move right now?",
+     "t_start": 33.7,
+     "t_end": 37.4
+    },
+    {
+     "speaker": "candidate",
+     "text": "Well, I've been at my current consulting firm for a while now, and I've kind of hit a plateau. I like the work, but there isn't really a clear path to grow into a formal leadership role there. I'm hoping a supervisor position would let me build on what I've been doing with the junior engineers, and I'm willing to relocate to Edmonton from Calgary for the right fit.",
+     "t_start": 38.3,
+     "t_end": 67.1
+    },
+    {
+     "speaker": "interviewer",
+     "text": "That makes sense. Could you give me a quick snapshot of your current role and scope?",
+     "t_start": 68.5,
+     "t_end": 74.4
+    },
+    {
+     "speaker": "candidate",
+     "text": "Sure. I'm a project engineer at a consulting firm in Calgary, and most of my work is electrical design for industrial clients, mainly power distribution and some motor control centres. I'm the project lead on a lot of our jobs, and I have two junior engineers I work with day to day, though I don't have a formal supervisor title. One project I'm proud of was a 4160 volt substation upgrade, where we handled the design and coordinated with the client through construction. I've been a P.Eng. with APEGA for about three years now.",
+     "t_start": 75.3,
+     "t_end": 114.5
+    },
+    {
+     "speaker": "interviewer",
+     "text": "Okay, the substation upgrade sounds like a good one. What hands-on work have you done with programmable logic controllers, HMIs, and instrumentation and controls?",
+     "t_start": 115.9,
+     "t_end": 124.8
+    },
+    {
+     "speaker": "candidate",
+     "text": "Honestly, that's a lighter area for me. On most of my projects I work with the controls team, so they handle the PLC programming and HMI side, and I focus on the power side, like the single lines, load lists, and how the MCCs tie into the control scheme. I've reviewed I/O lists and control drawings for things like motor starters and interlocks, but I haven't programmed PLCs myself. I'd be upfront that I'd have some learning to do there if the role needs someone hands-on.",
+     "t_start": 125.7,
+     "t_end": 161.5
+    },
+    {
+     "speaker": "interviewer",
+     "text": "That's clear, thanks for being straightforward. Have you worked in hazardous locations, and how did you apply the Canadian Electrical Code or the API 500 and 505 classification standards?",
+     "t_start": 162.9,
+     "t_end": 173.6
+    },
+    {
+     "speaker": "candidate",
+     "text": "I haven't led a hazardous-location design myself. I've reviewed other people's work on a few projects where there were classified areas, mostly checking that equipment selection and wiring methods lined up with the area classification drawings and the Canadian Electrical Code requirements. I know the basics of the zone and division approach, but I haven't done a classification myself, and I'd be going on general familiarity with API 500 and 505 rather than applying them directly. If that's a big part of the role, I'd want to get up to speed quickly.",
+     "t_start": 174.5,
+     "t_end": 212.9
+    },
+    {
+     "speaker": "interviewer",
+     "text": "Understood. Which drawings or deliverables have you reviewed, authenticated and stamped as a professional engineer under APEGA?",
+     "t_start": 214.3,
+     "t_end": 220.6
+    },
+    {
+     "speaker": "candidate",
+     "text": "I stamp the electrical design drawings for my projects, so things like single line diagrams, power distribution layouts, and MCC arrangement drawings. Before I stamp, we do an internal review, and I go through the calculations and check the drawings against the design basis and the code requirements. I also review some of the junior engineers' work before it goes out. I'll admit I'm more comfortable describing what I do than laying out every step of the formal process, but I do take the responsibility of the stamp seriously.",
+     "t_start": 221.5,
+     "t_end": 258.5
+    },
+    {
+     "speaker": "interviewer",
+     "text": "Okay, that's helpful. Can you tell me about a time you developed an engineer-in-training, programmer or designer?",
+     "t_start": 259.9,
+     "t_end": 266.2
+    },
+    {
+     "speaker": "candidate",
+     "text": "One of the junior engineers I work with came in about a year and a half ago, and I tried to give her room to take on more as she got comfortable. On a smaller MCC project, I had her draft the load list and the single line, and we sat down together to go over her calculations and talk through why certain choices were made. She ended up presenting the design to the client toward the end, which was a good step for her. I'd say it was more informal mentoring than a structured development plan, but it's the part of my work I enjoy most.",
+     "t_start": 267.1,
+     "t_end": 311.7
+    },
+    {
+     "speaker": "interviewer",
+     "text": "That makes sense. Can you tell me about a project you took from estimate or proposal through to commissioning, and what you owned?",
+     "t_start": 313.1,
+     "t_end": 321.6
+    },
+    {
+     "speaker": "candidate",
+     "text": "Probably the 4160 volt substation upgrade is the best example. I was involved in putting together the scope and the design side of the estimate, then led the design, and stayed involved through construction with client coordination and site questions. For commissioning, I was there in a support role, helping sort out issues with the design and checking things against the drawings, while the contractor and the controls team handled most of the testing and startup. I'd say I owned the electrical design and the client communication, but the budget and schedule were more managed by our project manager, and I'd have to be careful not to overstate my part in those.",
+     "t_start": 322.5,
+     "t_end": 369.2
+    },
+    {
+     "speaker": "interviewer",
+     "text": "Okay, that's clear. Are you legally eligible to work in Canada?",
+     "t_start": 370.6,
+     "t_end": 374.7
+    },
+    {
+     "speaker": "candidate",
+     "text": "Yes, I am. I'm a permanent resident, so I can work in Canada without any restrictions.",
+     "t_start": 375.6,
+     "t_end": 382.3
+    },
+    {
+     "speaker": "interviewer",
+     "text": "Understood. Are you a professional engineer in good standing with APEGA?",
+     "t_start": 383.7,
+     "t_end": 387.7
+    },
+    {
+     "speaker": "candidate",
+     "text": "Yes, I am. I've been a P.Eng. with APEGA for about three years, and I'm in good standing. I can provide my registration details whenever you need them.",
+     "t_start": 388.6,
+     "t_end": 400.3
+    },
+    {
+     "speaker": "interviewer",
+     "text": "Okay. Do you hold a bachelor's degree in electrical engineering?",
+     "t_start": 401.7,
+     "t_end": 405.4
+    },
+    {
+     "speaker": "candidate",
+     "text": "Yes, I do. I have a bachelor's degree in electrical engineering, and that's what I went through to get my P.Eng. I can send along the details of where and when I graduated if that's helpful.",
+     "t_start": 406.3,
+     "t_end": 421.3
+    },
+    {
+     "speaker": "interviewer",
+     "text": "That makes sense. The role involves up to twenty percent travel, with site stays of up to two weeks. Does that work for you?",
+     "t_start": 422.7,
+     "t_end": 431.6
+    },
+    {
+     "speaker": "candidate",
+     "text": "Yes, that works for me. Up to 20 percent travel is fine, and I'm okay with site stays of up to two weeks. Could I ask if the role is remote or hybrid, or if it's mostly in the Edmonton office? And how big is the team I'd be supervising?",
+     "t_start": 432.5,
+     "t_end": 453.3
+    },
+    {
+     "speaker": "interviewer",
+     "text": "Good to know. We'll make time for your questions at the end. What are your salary expectations for a role like this?",
+     "t_start": 454.7,
+     "t_end": 462.9
+    },
+    {
+     "speaker": "candidate",
+     "text": "I'm looking for something in the range of 140 to 155 thousand dollars. I'm open to talking about the full package too, so if there's flexibility depending on how the role is structured, I'd be glad to hear more.",
+     "t_start": 463.8,
+     "t_end": 480.0
+    },
+    {
+     "speaker": "interviewer",
+     "text": "Noted, thank you. What's your notice period with your current firm?",
+     "t_start": 481.4,
+     "t_end": 485.5
+    },
+    {
+     "speaker": "candidate",
+     "text": "I'd need about three weeks' notice with my current firm. If there's a relocation to Edmonton involved, I might need a bit of time around that too, but I can work through that based on the start date you have in mind.",
+     "t_start": 486.4,
+     "t_end": 503.9
+    },
+    {
+     "speaker": "interviewer",
+     "text": "That makes sense. Those are all the questions I have, so what questions do you have for me?",
+     "t_start": 505.3,
+     "t_end": 512.0
+    },
+    {
+     "speaker": "candidate",
+     "text": "Thanks, Avery. I'd like to know how big the team is that I'd be supervising, and whether they're mostly engineers, designers, or a mix. Is the role based in the Edmonton office, or is there any remote or hybrid flexibility? I'd also like to know how much of the role is hands-on technical work versus managing people and projects, and what the next steps in the process look like.",
+     "t_start": 512.9,
+     "t_end": 541.6
+    },
+    {
+     "speaker": "interviewer",
+     "text": "The team is a mix of electrical engineers, engineers-in-training, programmers and designers, and the supervisor stays hands-on in design reviews, project delivery and client relationships. Team size, remote or hybrid flexibility, the balance between technical and people work, and next steps are good ones for Stefanie. She'll confirm them with you. Do you have any other questions?",
+     "t_start": 543.0,
+     "t_end": 564.1
+    },
+    {
+     "speaker": "candidate",
+     "text": "That's helpful, thanks. I don't have any other questions right now. I appreciate you taking the time, Avery, and I'm looking forward to hearing from Stefanie's team.",
+     "t_start": 565.0,
+     "t_end": 576.3
+    },
+    {
+     "speaker": "interviewer",
+     "text": "Thank you for your time today. Stefanie's team will review everything personally and follow up with you. Take care.",
+     "t_start": 577.7,
+     "t_end": 584.7
+    }
+   ],
+   "card": {
+    "overall_score": 58,
+    "recommendation": "Hold",
+    "recommendation_note": "",
+    "headline": "Calgary-based P.Eng. (APEGA) project engineer with solid power distribution design and stamping experience and informal mentoring of two juniors; thin on controls, hazardous locations and formal supervision.",
+    "label": "Sample candidate (simulated)",
+    "summary_label": "AI-assisted summary for human review",
+    "competencies": [
+     {
+      "id": "technical_electrical",
+      "name": "Industrial electrical power systems",
+      "weight": 0.25,
+      "score": 4,
+      "confidence": "med",
+      "evidence": [
+       {
+        "quote": "most of my work is electrical design for industrial clients, mainly power distribution and some motor control centres",
+        "t": 75.3,
+        "verified": true
+       },
+       {
+        "quote": "One project I'm proud of was a 4160 volt substation upgrade, where we handled the design and coordinated with the client through construction",
+        "t": 75.3,
+        "verified": true
+       }
+      ],
+      "rationale": "Names a specific 4160 volt substation project and power distribution and MCC design work with personal ownership of the electrical design. Little detail on grounding, bonding or VFDs, and outcomes were not quantified.",
+      "evidence_note": ""
+     },
+     {
+      "id": "controls_automation",
+      "name": "Controls, automation and instrumentation",
+      "weight": 0.15,
+      "score": 2,
+      "confidence": "high",
+      "evidence": [
+       {
+        "quote": "I've reviewed I/O lists and control drawings for things like motor starters and interlocks, but I haven't programmed PLCs myself",
+        "t": 125.7,
+        "verified": true
+       }
+      ],
+      "rationale": "Candidate openly says this is a lighter area and has no hands-on PLC or HMI work. Experience is limited to reviewing I/O lists and control drawings and interfacing with the controls team.",
+      "evidence_note": ""
+     },
+     {
+      "id": "hazardous_locations_codes",
+      "name": "Hazardous locations and codes",
+      "weight": 0.15,
+      "score": 2,
+      "confidence": "high",
+      "evidence": [
+       {
+        "quote": "I haven't led a hazardous-location design myself",
+        "t": 174.5,
+        "verified": true
+       },
+       {
+        "quote": "I'd be going on general familiarity with API 500 and 505 rather than applying them directly",
+        "t": 174.5,
+        "verified": true
+       }
+      ],
+      "rationale": "Has reviewed others' work on classified areas against the CEC but has not done area classification or led a design. Knowledge of the standards is basic.",
+      "evidence_note": ""
+     },
+     {
+      "id": "pe_stamping",
+      "name": "Professional engineer review and stamping",
+      "weight": 0.15,
+      "score": 3,
+      "confidence": "med",
+      "evidence": [
+       {
+        "quote": "I stamp the electrical design drawings for my projects, so things like single line diagrams, power distribution layouts, and MCC arrangement drawings",
+        "t": 221.5,
+        "verified": true
+       },
+       {
+        "quote": "Before I stamp, we do an internal review, and I go through the calculations and check the drawings against the design basis and the code requirements",
+        "t": 221.5,
+        "verified": true
+       }
+      ],
+      "rationale": "Stamps their own drawings and describes a reasonable review process, and also reviews junior work. They admit they are less sure of the formal process, and APEGA authentication requirements were not discussed in detail.",
+      "evidence_note": ""
+     },
+     {
+      "id": "team_leadership",
+      "name": "Leading engineers, engineers-in-training, programmers and designers",
+      "weight": 0.2,
+      "score": 3,
+      "confidence": "med",
+      "evidence": [
+       {
+        "quote": "I had her draft the load list and the single line, and we sat down together to go over her calculations and talk through why certain choices were made",
+        "t": 267.1,
+        "verified": true
+       },
+       {
+        "quote": "I'd say it was more informal mentoring than a structured development plan, but it's the part of my work I enjoy most",
+        "t": 267.1,
+        "verified": true
+       }
+      ],
+      "rationale": "Gives a concrete mentoring example with a good outcome (junior presented to the client). Leadership is limited to two juniors with no formal supervisory role or performance management.",
+      "evidence_note": ""
+     },
+     {
+      "id": "project_delivery",
+      "name": "Project estimating, scheduling, clients and commissioning",
+      "weight": 0.1,
+      "score": 3,
+      "confidence": "med",
+      "evidence": [
+       {
+        "quote": "I owned the electrical design and the client communication, but the budget and schedule were more managed by our project manager",
+        "t": 322.5,
+        "verified": true
+       },
+       {
+        "quote": "For commissioning, I was there in a support role, helping sort out issues with the design and checking things against the drawings",
+        "t": 322.5,
+        "verified": true
+       }
+      ],
+      "rationale": "Covers a project from estimate through construction with real client coordination. Budget, schedule and commissioning were mostly owned by others and no numbers were given.",
+      "evidence_note": ""
+     }
+    ],
+    "knockouts": [
+     {
+      "id": "work_auth",
+      "question": "Are you legally eligible to work in Canada?",
+      "required": true,
+      "status": "pass",
+      "answer": "Eligible to work in Canada",
+      "quote": "I can work in Canada without any restrictions",
+      "quote_verified": true,
+      "t": 375.6,
+      "note": ""
+     },
+     {
+      "id": "pe_apega",
+      "question": "Do you hold a professional engineer designation in good standing with APEGA?",
+      "required": true,
+      "status": "pass",
+      "answer": "P.Eng. with APEGA for about three years, in good standing",
+      "quote": "I've been a P.Eng. with APEGA for about three years, and I'm in good standing",
+      "quote_verified": true,
+      "t": 388.6,
+      "note": ""
+     },
+     {
+      "id": "degree",
+      "question": "Do you have a bachelor's degree in electrical engineering?",
+      "required": true,
+      "status": "pass",
+      "answer": "Holds a bachelor's degree in electrical engineering",
+      "quote": "I have a bachelor's degree in electrical engineering, and that's what I went through to get my P.Eng",
+      "quote_verified": true,
+      "t": 406.3,
+      "note": ""
+     },
+     {
+      "id": "travel",
+      "question": "This role involves some travel to industrial project sites, up to about twenty percent of your working time, with site assignments usually not longer than two consecutive weeks. Does that work for you?",
+      "required": true,
+      "status": "pass",
+      "answer": "Fine with up to 20 percent travel and site stays up to two weeks",
+      "quote": "Up to 20 percent travel is fine, and I'm okay with site stays of up to two weeks",
+      "quote_verified": true,
+      "t": 432.5,
+      "note": ""
+     },
+     {
+      "id": "location",
+      "question": "This role is based in Edmonton. Are you based there now, or would you be relocating?",
+      "required": false,
+      "status": "pass",
+      "answer": "Based in Calgary, willing to relocate to Edmonton",
+      "quote": "I'm willing to relocate to Edmonton from Calgary for the right fit",
+      "quote_verified": true,
+      "t": 38.3,
+      "note": ""
+     },
+     {
+      "id": "salary",
+      "question": "What salary range are you targeting for a move like this?",
+      "required": false,
+      "status": "pass",
+      "answer": "Targeting 140 to 155 thousand dollars, open on full package",
+      "quote": "I'm looking for something in the range of 140 to 155 thousand dollars",
+      "quote_verified": true,
+      "t": 463.8,
+      "note": ""
+     },
+     {
+      "id": "notice_period",
+      "question": "And what notice period would you need to give your current employer?",
+      "required": false,
+      "status": "pass",
+      "answer": "About three weeks, possibly a bit more around relocation",
+      "quote": "I'd need about three weeks' notice with my current firm",
+      "quote_verified": true,
+      "t": 486.4,
+      "note": ""
+     }
+    ],
+    "knockouts_required_passed": 4,
+    "knockouts_required": 4,
+    "strengths": [
+     "All required knock-outs passed: APEGA P.Eng. in good standing, EE degree, travel OK, work eligible",
+     "Specific 4160 volt substation upgrade with ownership of electrical design and client communication",
+     "Stamps own drawings and reviews junior engineers' work",
+     "Candid about gaps and does not overstate their role"
+    ],
+    "risks": [
+     "No formal supervisory title; leadership limited to informally mentoring two junior engineers",
+     "No hands-on PLC/HMI or hazardous location classification experience, which may matter for a hands-on supervisor",
+     "Budget, schedule and commissioning were owned by others, with no delivery numbers",
+     "Relocation from Calgary is a stated willingness only; timing and commitment need confirming"
+    ],
+    "verify_on_call": [
+     "Confirm APEGA registration number and good standing, and clarify their understanding of APEGA authentication requirements",
+     "Probe real leadership scope: team sizes handled, any performance feedback given, and readiness to supervise a mixed team including programmers",
+     "Confirm relocation commitment and timing to Edmonton, and whether the 140 to 155 thousand range is flexible"
+    ],
+    "candidate_questions_to_answer": [
+     "How big is the team being supervised, and what is the mix of engineers, designers and others?",
+     "Is the role fully based in the Edmonton office or is there remote or hybrid flexibility?",
+     "How much of the role is hands-on technical work versus managing people and projects?",
+     "What are the next steps in the process?"
+    ],
+    "logistics": {
+     "salary": {
+      "answer": "Targeting 140 to 155 thousand dollars, open on full package",
+      "quote": "I'm looking for something in the range of 140 to 155 thousand dollars",
+      "status": "pass"
+     },
+     "notice_period": {
+      "answer": "About three weeks, possibly a bit more around relocation",
+      "quote": "I'd need about three weeks' notice with my current firm",
+      "status": "pass"
+     },
+     "location": {
+      "answer": "Based in Calgary, willing to relocate to Edmonton",
+      "quote": "I'm willing to relocate to Edmonton from Calgary for the right fit",
+      "status": "pass"
+     },
+     "travel": {
+      "answer": "Fine with up to 20 percent travel and site stays up to two weeks",
+      "quote": "Up to 20 percent travel is fine, and I'm okay with site stays of up to two weeks",
+      "status": "pass"
+     }
+    },
+    "not_in_posting": [
+     "compensation",
+     "benefits",
+     "the client's name"
+    ],
+    "quote_check": {
+     "proposed": 18,
+     "dropped": 0
+    },
+    "versions": {
+     "scorecard_model": "claude-sonnet-5-5",
+     "scorecard_prompt": "scorecard-claude-v2"
+    },
+    "generated_at": 1793553273.0764916
+   },
+   "created_at": 1793553273,
+   "duration_s": 584.7,
+   "generated_in_s": 22.0
+  },
+  {
+   "id": "sample-weak",
+   "role_id": "5905",
+   "candidate_name": "Casey Reid",
+   "label": "Sample candidate (simulated)",
+   "sample_kind": "weak",
+   "turns": [
+    {
+     "speaker": "interviewer",
+     "text": "Hi, I'm Avery, IN DEMAND's AI screening assistant. This is a short first conversation, about ten to fifteen minutes, about the Electrical Engineering Supervisor role in Edmonton. It's recorded so Stefanie's team can review it personally. AI assists the screening, but it doesn't replace human judgment, and you can ask to speak with a person at any time. Shall we start?",
+     "t_start": 3.0,
+     "t_end": 25.6
+    },
+    {
+     "speaker": "candidate",
+     "text": "Sure, that's fine. Before we start, can I ask if the job is really available right away? I'd like to know it's an actual opening.",
+     "t_start": 26.5,
+     "t_end": 36.9
+    },
+    {
+     "speaker": "interviewer",
+     "text": "That's a good one for Stefanie. She'll confirm it with you. To start, what's prompting you to consider a move right now?",
+     "t_start": 38.3,
+     "t_end": 46.5
+    },
+    {
+     "speaker": "candidate",
+     "text": "Mostly I'm looking for a pay increase and a better title. I've been about six years in the industry, and I feel ready for the next step.",
+     "t_start": 47.4,
+     "t_end": 58.6
+    },
+    {
+     "speaker": "interviewer",
+     "text": "That makes sense. Could you give me a quick snapshot of your current role and scope?",
+     "t_start": 60.0,
+     "t_end": 65.9
+    },
+    {
+     "speaker": "candidate",
+     "text": "I'm a junior engineer right now, and before that I was an electrical technologist. We mostly install and troubleshoot motor control centres, and we've done some PLC changes under supervision. I've also coordinated some contractors.",
+     "t_start": 66.8,
+     "t_end": 81.4
+    },
+    {
+     "speaker": "interviewer",
+     "text": "Okay, thanks for that. Which industrial power systems have you been responsible for, such as three-phase distribution, variable frequency drives, or grounding and bonding, and what was your part in them?",
+     "t_start": 82.8,
+     "t_end": 94.3
+    },
+    {
+     "speaker": "candidate",
+     "text": "Mostly the motor control centres, which are three-phase. We've worked around some drives too, but I'm not sure I'd say I was responsible for them. I helped with installs and troubleshooting, and we followed the code on grounding and bonding.",
+     "t_start": 95.2,
+     "t_end": 111.9
+    },
+    {
+     "speaker": "interviewer",
+     "text": "I see. Could you give me one specific example, what you did and how it turned out?",
+     "t_start": 113.3,
+     "t_end": 119.6
+    },
+    {
+     "speaker": "candidate",
+     "text": "Sure. We had a motor control centre that kept tripping on one of the feeders, so we did a lot of troubleshooting and eventually found a loose connection. We fixed it and it ran fine after that. I'm not sure I can give much more detail than that.",
+     "t_start": 120.5,
+     "t_end": 140.5
+    },
+    {
+     "speaker": "interviewer",
+     "text": "Understood. Next, what hands-on work have you done with programmable logic controllers, HMIs, and instrumentation and controls?",
+     "t_start": 141.9,
+     "t_end": 148.2
+    },
+    {
+     "speaker": "candidate",
+     "text": "We've done some PLC changes under supervision, mostly small edits to existing programs. I've seen HMIs and instrumentation on the jobs, but I haven't really worked on them much myself, so I'm not sure I can say more than that.",
+     "t_start": 149.1,
+     "t_end": 165.7
+    },
+    {
+     "speaker": "interviewer",
+     "text": "That's helpful. Could you give me one specific example, what you did and how it turned out?",
+     "t_start": 167.1,
+     "t_end": 173.4
+    },
+    {
+     "speaker": "candidate",
+     "text": "One time we had to change a PLC program so a pump would start after a different condition. I made the edit under supervision, we tested it, and it worked. I'm not sure I remember the exact details beyond that.",
+     "t_start": 174.3,
+     "t_end": 191.0
+    },
+    {
+     "speaker": "interviewer",
+     "text": "Okay. Have you worked in hazardous locations, and if so, how did you apply the Canadian Electrical Code or the API 500 and 505 classification standards?",
+     "t_start": 192.4,
+     "t_end": 202.0
+    },
+    {
+     "speaker": "candidate",
+     "text": "I haven't really worked in hazardous locations myself. We followed the electrical code on jobs, but I can't name specific sections or the API standards, and I'm not sure I'd want to claim more than that.",
+     "t_start": 202.9,
+     "t_end": 217.9
+    },
+    {
+     "speaker": "interviewer",
+     "text": "Fair enough. Have you reviewed, authenticated, or stamped any drawings or deliverables as a professional engineer under APEGA?",
+     "t_start": 219.3,
+     "t_end": 226.0
+    },
+    {
+     "speaker": "candidate",
+     "text": "No, I haven't stamped any drawings. I'm an engineer-in-training with APEGA, not a professional engineer, and I don't have a timeline for getting my P.Eng.",
+     "t_start": 226.9,
+     "t_end": 237.3
+    },
+    {
+     "speaker": "interviewer",
+     "text": "That makes sense. Can you tell me about a time you developed an engineer-in-training, programmer, or designer?",
+     "t_start": 238.7,
+     "t_end": 245.0
+    },
+    {
+     "speaker": "candidate",
+     "text": "I haven't really developed anyone in that way. We worked as a team, and I've coordinated some contractors, but I haven't led or mentored people formally. I'm not sure I have a good example for that.",
+     "t_start": 245.9,
+     "t_end": 260.9
+    },
+    {
+     "speaker": "interviewer",
+     "text": "Okay, I appreciate your honesty. Can you tell me about a project you took from estimate or proposal through to commissioning, and what you owned?",
+     "t_start": 262.3,
+     "t_end": 271.6
+    },
+    {
+     "speaker": "candidate",
+     "text": "I haven't taken a project from estimate through to commissioning on my own. We were involved in the install and commissioning side on some jobs, but I wasn't doing the estimating or owning the project. I'm not sure I can give you a full example of that.",
+     "t_start": 272.5,
+     "t_end": 292.0
+    },
+    {
+     "speaker": "interviewer",
+     "text": "Understood. Are you legally eligible to work in Canada?",
+     "t_start": 293.4,
+     "t_end": 296.8
+    },
+    {
+     "speaker": "candidate",
+     "text": "Yes, I'm a Canadian citizen, so I'm eligible to work in Canada. I'm based in Red Deer.",
+     "t_start": 297.7,
+     "t_end": 304.8
+    },
+    {
+     "speaker": "interviewer",
+     "text": "That makes sense. Do you hold a bachelor's degree in electrical engineering?",
+     "t_start": 306.2,
+     "t_end": 310.6
+    },
+    {
+     "speaker": "candidate",
+     "text": "No, I don't. I have an electrical engineering technology diploma, and I'm an engineer-in-training with APEGA.",
+     "t_start": 311.5,
+     "t_end": 318.2
+    },
+    {
+     "speaker": "interviewer",
+     "text": "Okay. I already have your APEGA status, so I won't ask that again. The role involves up to twenty percent travel, with site stays of up to two weeks. Does that work for you?",
+     "t_start": 319.6,
+     "t_end": 332.2
+    },
+    {
+     "speaker": "candidate",
+     "text": "Yes, travel is fine with me. Two-week site stays wouldn't be a problem.",
+     "t_start": 333.1,
+     "t_end": 338.5
+    },
+    {
+     "speaker": "interviewer",
+     "text": "Good. You mentioned you're based in Red Deer, so does working in Edmonton work for you?",
+     "t_start": 339.9,
+     "t_end": 345.8
+    },
+    {
+     "speaker": "candidate",
+     "text": "Yes, Edmonton should be fine. I'm not sure yet whether I'd commute or relocate, but it's not a problem for me. Is the role on-site full time, or is there some flexibility?",
+     "t_start": 346.7,
+     "t_end": 360.0
+    },
+    {
+     "speaker": "interviewer",
+     "text": "That's a good one for Stefanie. She'll confirm it with you. What are your salary expectations for a role like this?",
+     "t_start": 361.4,
+     "t_end": 369.2
+    },
+    {
+     "speaker": "candidate",
+     "text": "I'm expecting around 120 thousand dollars. I'm not sure how that compares to what the role pays, so is there a range you can share?",
+     "t_start": 370.1,
+     "t_end": 380.5
+    },
+    {
+     "speaker": "interviewer",
+     "text": "Noted, thank you. The pay range for this role is a good one for Stefanie, and she'll confirm it with you. What's your notice period with your current employer?",
+     "t_start": 381.9,
+     "t_end": 392.7
+    },
+    {
+     "speaker": "candidate",
+     "text": "My notice period is two weeks.",
+     "t_start": 393.6,
+     "t_end": 396.1
+    },
+    {
+     "speaker": "interviewer",
+     "text": "Okay, that's everything I had for you. What questions do you have about the role?",
+     "t_start": 397.5,
+     "t_end": 403.0
+    },
+    {
+     "speaker": "candidate",
+     "text": "I just have a couple. Is the role really available right away, and what are the next steps in the process? Also, since it's a supervisor role, I'm not sure how my background lines up, so is there anything Stefanie would want me to know about that?",
+     "t_start": 403.9,
+     "t_end": 423.5
+    },
+    {
+     "speaker": "interviewer",
+     "text": "Those are good ones for Stefanie. She'll confirm them with you, including how your background lines up. Do you have any other questions?",
+     "t_start": 424.9,
+     "t_end": 433.4
+    },
+    {
+     "speaker": "candidate",
+     "text": "No, that's all for now. Thanks for your time, and I'll wait to hear from Stefanie.",
+     "t_start": 434.3,
+     "t_end": 441.0
+    },
+    {
+     "speaker": "interviewer",
+     "text": "Thank you for your time today. Stefanie's team will review the conversation personally and be in touch. Take care.",
+     "t_start": 442.4,
+     "t_end": 449.4
+    }
+   ],
+   "card": {
+    "overall_score": 12,
+    "recommendation": "Pass",
+    "recommendation_note": "",
+    "headline": "Junior engineer and former technologist from Red Deer with some motor control centre and minor PLC edit experience, but no P.Eng., no EE degree and no leadership or project ownership, so not a fit for this supervisor role.",
+    "label": "Sample candidate (simulated)",
+    "summary_label": "AI-assisted summary for human review",
+    "competencies": [
+     {
+      "id": "technical_electrical",
+      "name": "Industrial electrical power systems",
+      "weight": 0.25,
+      "score": 2,
+      "confidence": "med",
+      "evidence": [
+       {
+        "quote": "Mostly the motor control centres, which are three-phase. We've worked around some drives too, but I'm not sure I'd say I was responsible for them",
+        "t": 95.2,
+        "verified": true
+       },
+       {
+        "quote": "we did a lot of troubleshooting and eventually found a loose connection. We fixed it and it ran fine after that",
+        "t": 120.5,
+        "verified": true
+       }
+      ],
+      "rationale": "Hands-on install and troubleshooting of motor control centres, with a single basic example (a loose connection on a feeder). No design ownership, and the candidate disclaimed responsibility for drives.",
+      "evidence_note": ""
+     },
+     {
+      "id": "controls_automation",
+      "name": "Controls, automation and instrumentation",
+      "weight": 0.15,
+      "score": 2,
+      "confidence": "med",
+      "evidence": [
+       {
+        "quote": "We've done some PLC changes under supervision, mostly small edits to existing programs",
+        "t": 149.1,
+        "verified": true
+       },
+       {
+        "quote": "I made the edit under supervision, we tested it, and it worked",
+        "t": 174.3,
+        "verified": true
+       }
+      ],
+      "rationale": "Made small supervised PLC edits, including one pump start condition change. Little HMI or instrumentation experience, and no platforms named.",
+      "evidence_note": ""
+     },
+     {
+      "id": "hazardous_locations_codes",
+      "name": "Hazardous locations and codes",
+      "weight": 0.15,
+      "score": 1,
+      "confidence": "high",
+      "evidence": [
+       {
+        "quote": "I haven't really worked in hazardous locations myself",
+        "t": 202.9,
+        "verified": true
+       }
+      ],
+      "rationale": "No hazardous location work, and the candidate could not name code sections or API standards.",
+      "evidence_note": ""
+     },
+     {
+      "id": "pe_stamping",
+      "name": "Professional engineer review and stamping",
+      "weight": 0.15,
+      "score": 1,
+      "confidence": "high",
+      "evidence": [
+       {
+        "quote": "No, I haven't stamped any drawings. I'm an engineer-in-training with APEGA, not a professional engineer",
+        "t": 226.9,
+        "verified": true
+       }
+      ],
+      "rationale": "Has never stamped or authenticated drawings, is not a P.Eng., and has no timeline for getting the designation.",
+      "evidence_note": ""
+     },
+     {
+      "id": "team_leadership",
+      "name": "Leading engineers, engineers-in-training, programmers and designers",
+      "weight": 0.2,
+      "score": 1,
+      "confidence": "high",
+      "evidence": [
+       {
+        "quote": "I haven't led or mentored people formally",
+        "t": 245.9,
+        "verified": true
+       }
+      ],
+      "rationale": "No formal leadership or mentoring experience. Only coordinated some contractors.",
+      "evidence_note": ""
+     },
+     {
+      "id": "project_delivery",
+      "name": "Project estimating, scheduling, clients and commissioning",
+      "weight": 0.1,
+      "score": 1,
+      "confidence": "high",
+      "evidence": [
+       {
+        "quote": "I haven't taken a project from estimate through to commissioning on my own",
+        "t": 272.5,
+        "verified": true
+       }
+      ],
+      "rationale": "No ownership of estimating, scheduling or budgets. Involved only on the install and commissioning side.",
+      "evidence_note": ""
+     }
+    ],
+    "knockouts": [
+     {
+      "id": "work_auth",
+      "question": "Are you legally eligible to work in Canada?",
+      "required": true,
+      "status": "pass",
+      "answer": "Eligible to work in Canada",
+      "quote": "I'm eligible to work in Canada",
+      "quote_verified": true,
+      "t": 297.7,
+      "note": ""
+     },
+     {
+      "id": "pe_apega",
+      "question": "Do you hold a professional engineer designation in good standing with APEGA?",
+      "required": true,
+      "status": "fail",
+      "answer": "Engineer-in-training with APEGA, not a P.Eng., and no timeline for getting it",
+      "quote": "I'm an engineer-in-training with APEGA, not a professional engineer, and I don't have a timeline for getting my P.Eng",
+      "quote_verified": true,
+      "t": 226.9,
+      "note": ""
+     },
+     {
+      "id": "degree",
+      "question": "Do you have a bachelor's degree in electrical engineering?",
+      "required": true,
+      "status": "fail",
+      "answer": "No bachelor's in electrical engineering; holds an electrical engineering technology diploma",
+      "quote": "No, I don't. I have an electrical engineering technology diploma",
+      "quote_verified": true,
+      "t": 311.5,
+      "note": ""
+     },
+     {
+      "id": "travel",
+      "question": "This role involves some travel to industrial project sites, up to about twenty percent of your working time, with site assignments usually not longer than two consecutive weeks. Does that work for you?",
+      "required": true,
+      "status": "pass",
+      "answer": "Fine with up to 20% travel and two-week site stays",
+      "quote": "Yes, travel is fine with me. Two-week site stays wouldn't be a problem",
+      "quote_verified": true,
+      "t": 333.1,
+      "note": ""
+     },
+     {
+      "id": "location",
+      "question": "This role is based in Edmonton. Are you based there now, or would you be relocating?",
+      "required": false,
+      "status": "pass",
+      "answer": "Based in Red Deer; Edmonton is fine, undecided between commuting and relocating",
+      "quote": "I'm not sure yet whether I'd commute or relocate, but it's not a problem for me",
+      "quote_verified": true,
+      "t": 346.7,
+      "note": ""
+     },
+     {
+      "id": "salary",
+      "question": "What salary range are you targeting for a move like this?",
+      "required": false,
+      "status": "pass",
+      "answer": "Expects around $120,000 and asked for the range",
+      "quote": "I'm expecting around 120 thousand dollars",
+      "quote_verified": true,
+      "t": 370.1,
+      "note": ""
+     },
+     {
+      "id": "notice_period",
+      "question": "And what notice period would you need to give your current employer?",
+      "required": false,
+      "status": "pass",
+      "answer": "Two weeks",
+      "quote": "My notice period is two weeks",
+      "quote_verified": true,
+      "t": 393.6,
+      "note": ""
+     }
+    ],
+    "knockouts_required_passed": 2,
+    "knockouts_required": 4,
+    "strengths": [
+     "Honest and direct about the limits of their experience",
+     "Hands-on motor control centre troubleshooting and small supervised PLC edits",
+     "Open to travel and to Edmonton, with a two-week notice period"
+    ],
+    "risks": [
+     "Fails two required knock-outs: no P.Eng. in good standing with APEGA and no bachelor's in electrical engineering",
+     "No leadership, mentoring, estimating or project ownership experience for a supervisor role",
+     "No hazardous locations or code experience, and limited design and controls depth",
+     "Salary expectation of about $120K may be well above what the experience supports; the candidate also seems unsure about fit"
+    ],
+    "verify_on_call": [
+     "Confirm the P.Eng. status and whether any route to registration exists given the diploma and no timeline",
+     "Confirm current title and actual scope, since the candidate describes a junior engineer role and about six years of experience",
+     "Confirm whether the candidate would commute or relocate to Edmonton, and whether the $120K expectation is realistic"
+    ],
+    "candidate_questions_to_answer": [
+     "Is the role really available right away?",
+     "What are the next steps in the process?",
+     "Is the role on-site full time or is there flexibility?",
+     "What is the pay range for the role?",
+     "How does the candidate's background line up with a supervisor role?"
+    ],
+    "logistics": {
+     "salary": {
+      "answer": "Expects around $120,000 and asked for the range",
+      "quote": "I'm expecting around 120 thousand dollars",
+      "status": "pass"
+     },
+     "notice_period": {
+      "answer": "Two weeks",
+      "quote": "My notice period is two weeks",
+      "status": "pass"
+     },
+     "location": {
+      "answer": "Based in Red Deer; Edmonton is fine, undecided between commuting and relocating",
+      "quote": "I'm not sure yet whether I'd commute or relocate, but it's not a problem for me",
+      "status": "pass"
+     },
+     "travel": {
+      "answer": "Fine with up to 20% travel and two-week site stays",
+      "quote": "Yes, travel is fine with me. Two-week site stays wouldn't be a problem",
+      "status": "pass"
+     }
+    },
+    "not_in_posting": [
+     "compensation",
+     "benefits",
+     "the client's name"
+    ],
+    "quote_check": {
+     "proposed": 15,
+     "dropped": 0
+    },
+    "versions": {
+     "scorecard_model": "claude-sonnet-5-5",
+     "scorecard_prompt": "scorecard-claude-v2"
+    },
+    "generated_at": 1793553287.412486
+   },
+   "created_at": 1793553287,
+   "duration_s": 449.4,
+   "generated_in_s": 12.7
+  }
+ ]
+}

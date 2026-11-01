@@ -45,7 +45,7 @@ ANTHROPIC_FALLBACK_MODEL = os.environ.get("ANTHROPIC_FALLBACK_MODEL", "")  # bla
 SCORECARD_EFFORT = os.environ.get("SCORECARD_EFFORT", "medium")
 SCORECARD_TIMEOUT_S = float(os.environ.get("SCORECARD_TIMEOUT_S", "75"))
 SCORECARD_ATTEMPTS = 2
-SCORECARD_PROMPT_VERSION = "scorecard-claude-v1"
+SCORECARD_PROMPT_VERSION = "scorecard-claude-v2"
 
 # --- access: one unguessable token in the URL (?k=...) ---
 ACCESS_TOKEN = os.environ.get("ACCESS_TOKEN", "")

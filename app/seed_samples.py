@@ -23,8 +23,21 @@ from app import scorecard
 from role_config import load_role
 
 END_MARK = "[END_CALL]"
-SIM_NOTE = (f"\n\n(Simulation note, not part of your instructions to the candidate: this is a text rehearsal. Write only what you would say aloud. "
-            f"When the interview is complete and you have said your goodbye, end that final message with the exact marker {END_MARK}.)")
+SIM_NOTE = (f"\n\n(Simulation note, not part of your instructions to the candidate: this is a text rehearsal. Write only the words you would say aloud: "
+            f"never a tool call, JSON, a code block or the word endCall. When the interview is complete, say your goodbye in words and end that "
+            f"same message with the exact marker {END_MARK}.)")
+
+_JSON_OBJ = re.compile(r"\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\}")
+_FENCE = re.compile(r"```.*?```|```", re.S)
+
+
+def clean_avery(text: str) -> tuple[str, bool]:
+    """The rehearsal model sometimes writes the endCall tool as text. Strip tool-call noise; -> (spoken words, ended-by-marker)."""
+    ended = END_MARK in text
+    t = _FENCE.sub(" ", text.replace(END_MARK, " "))
+    t = _JSON_OBJ.sub(" ", t)
+    t = re.sub(r"\bendCall\b", " ", t, flags=re.I)
+    return " ".join(t.split()), ended
 
 PERSONAS = [
     {"kind": "strong", "name": "Alex Morgan", "first": "Alex", "brief": """You are Alex Morgan, a fictional candidate. 14 years in industrial electrical engineering; P.Eng. in good standing with APEGA for 9 years; electrical engineering degree from a Canadian university; Canadian citizen; based in Edmonton.
@@ -80,9 +93,7 @@ async def simulate(client, model: str, avery_system: str, first_message: str, pe
     for _ in range(max_turns):
         if not history or history[-1][0] == "avery":
             history.append(("candidate", await _say(client, model, cand_sys, history, "candidate")))
-        a = await _say(client, model, avery_sys, history, "avery")
-        ended = END_MARK in a
-        a = a.replace(END_MARK, "").strip()
+        a, ended = clean_avery(await _say(client, model, avery_sys, history, "avery"))
         if a:
             history.append(("avery", a))
         if ended:

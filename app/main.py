@@ -155,8 +155,13 @@ def _row(interview_id: str):
     return r or store.get(interview_id)
 
 
+def _name(r) -> str:
+    """What the page calls this interview: a simulated candidate's fictional name, or "Your interview" for a live session."""
+    return r["candidate_name"] if r["kind"] == "sample" else "Your interview"
+
+
 def _base(r) -> dict:
-    return {"id": r["id"], "label": r["label"], "is_sample": r["kind"] == "sample", "candidate_name": r["candidate_name"],
+    return {"id": r["id"], "label": r["label"], "is_sample": r["kind"] == "sample", "candidate_name": _name(r),
             "role_id": r["role_id"], "duration_s": r["duration_s"], "has_recording": bool(r["has_recording"]) and r["kind"] == "live",
             "ended_reason": r["ended_reason"]}
 
@@ -241,13 +246,17 @@ async def dashboard(known: str | None = Query(default=None)):
             adopt(cid)
     rows = store.q("SELECT * FROM interviews WHERE role_id = ? AND (kind = 'sample' OR status != 'in-progress' OR created_at > ?) "
                    "ORDER BY (status = 'ready') DESC, score DESC, created_at DESC", cfg.LIVE_ROLE_ID, time.time() - 3600)
-    out, rank = [], 0
+    out, rank, unscored = [], 0, 0
     for r in rows:
+        if r["kind"] == "live" and r["status"] != "ready":
+            unscored += 1
+            if unscored > 2:  # keep the table readable: only the two most recent unscored attempts (short, failed, still scoring)
+                continue
         card = json.loads(r["card_json"]) if r["status"] == "ready" and r["card_json"] else None
         if card:
             rank += 1
         req = [{"id": c["id"], "status": c["status"]} for c in (card["knockouts"] if card else []) if c["required"]]
-        out.append({"rank": rank if card else None, "id": r["id"], "candidate_name": r["candidate_name"], "label": r["label"],
+        out.append({"rank": rank if card else None, "id": r["id"], "candidate_name": _name(r), "label": r["label"],
                     "is_sample": r["kind"] == "sample", "sample_kind": r["sample_kind"], "status": r["status"], "score": r["score"],
                     "recommendation": r["recommendation"], "knockouts": req, "top_flag": (card["risks"][0] if card and card["risks"] else None),
                     "headline": card["headline"] if card else None, "date": r["ended_at"] or r["created_at"]})
