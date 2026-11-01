@@ -108,10 +108,11 @@ async def session_end(sid: str):
 
 # ---- processing: Vapi transcript -> Claude scorecard ----------------------------------------------------------------------------------
 def start_processing(call_id: str) -> None:
-    if call_id in _inflight:
+    """Score a call at most once. The database claim is what enforces it: a call that already has its scorecard, or is being scored
+    right now, cannot be claimed, so repeated end events, reloads, retries and rebuilds are all no-ops for it."""
+    if call_id in _inflight or not store.claim_for_scoring(call_id):
         return
     _inflight.add(call_id)
-    store.update(call_id, status="processing", error=None)
     spawn(process_live(call_id))
 
 
@@ -123,17 +124,18 @@ async def process_live(call_id: str) -> None:
                      ended_reason=call.ended_reason, has_recording=int(call.has_recording))
         res = await scorecard.generate(role(), call.turns, call.ended_reason, cfg.LIVE_LABEL)
         if res.ok:
-            store.save_card(call_id, res.card, res.attempts, time.time() - t0)
+            if not store.save_card(call_id, res.card, res.attempts, time.time() - t0):
+                log.warning("scorecard for %s already existed; the new one was discarded", call_id)
         elif res.attempts == 0:
-            store.update(call_id, status="unusable", error=res.error)
+            store.mark_unfinished(call_id, "unusable", error=res.error)
         else:
-            store.update(call_id, status="failed", attempts=res.attempts, error=res.error)
+            store.mark_unfinished(call_id, "failed", attempts=res.attempts, error=res.error)
             log.warning("scorecard failed for %s: %s", call_id, res.error)
     except vapi.NotOurCall:
-        store.update(call_id, status="failed", error="not one of this assistant's calls")
+        store.mark_unfinished(call_id, "failed", error="not one of this assistant's calls")
     except Exception as e:  # noqa: BLE001
         log.warning("processing %s failed: %s: %s", call_id, type(e).__name__, str(e)[:200])
-        store.update(call_id, status="failed", error=f"{type(e).__name__}: {str(e)[:200]}")
+        store.mark_unfinished(call_id, "failed", error=f"{type(e).__name__}: {str(e)[:200]}")
     finally:
         _inflight.discard(call_id)
 
@@ -142,7 +144,7 @@ def adopt(call_id: str) -> bool:
     """A call id this server has no row for (the host restarted and lost its disk): rebuild it from Vapi. False if it can't be."""
     if not vapi.valid_call_id(call_id) or not (cfg.VAPI_PRIVATE_KEY and cfg.VAPI_ASSISTANT_ID):
         return False
-    store.create_live(call_id)
+    store.create_live(call_id, rebuilt=True)  # flagged, so the page can say this is a second scoring of the call
     start_processing(call_id)
     return True
 
@@ -163,7 +165,7 @@ def _name(r) -> str:
 def _base(r) -> dict:
     return {"id": r["id"], "label": r["label"], "is_sample": r["kind"] == "sample", "candidate_name": _name(r),
             "role_id": r["role_id"], "duration_s": r["duration_s"], "has_recording": bool(r["has_recording"]) and r["kind"] == "live",
-            "ended_reason": r["ended_reason"]}
+            "ended_reason": r["ended_reason"], "rebuilt": bool(r["rebuilt"])}
 
 
 @router.get("/interviews/{interview_id}/scorecard")
@@ -189,7 +191,7 @@ async def get_scorecard(interview_id: str):
 @router.post("/interviews/{interview_id}/scorecard/retry")
 async def retry_scorecard(interview_id: str):
     r = _row(interview_id)
-    if r["kind"] != "live" or r["status"] not in ("failed", "in-progress", "unusable"):
+    if r["kind"] != "live" or r["status"] not in ("failed", "unusable"):  # never for a call that has a scorecard or is being scored
         raise HTTPException(409, "scorecard is not in a failed state")
     start_processing(interview_id)
     return {"status": "generating"}

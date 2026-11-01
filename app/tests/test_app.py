@@ -344,3 +344,84 @@ def test_dashboard_names_live_session_and_caps_unscored_rows(client):
     assert CALL_ID in [r["id"] for r in scored] and [r["rank"] for r in scored] == list(range(1, len(scored) + 1))
     assert all(r["score"] is None for r in rows if r["rank"] is None)
     assert {r["label"] for r in live} == {"Live demo session"}
+
+
+# ---- write-once scorecards: one generation per call, never redone by reloads, repeats or retries -----------------------------------
+def _fake_pipeline(monkeypatch, scores):
+    """Every generate() call returns the next score (74, 75, ...) so any regeneration is visible as a changed score."""
+    calls = []
+
+    async def fake_fetch(call_id, wait_s=60.0, poll_s=2.5):
+        return vapi.CallData(call_id, "ended", "assistant-ended-call", 1000.0, 1100.0, 100.0, TURNS, True)
+
+    async def fake_generate(role, turns, ended_reason, label, client=None, on_attempt=None):
+        calls.append(1)
+        out = good_output()
+        out["overall_score"] = scores[min(len(calls) - 1, len(scores) - 1)]
+        return scorecard.Result(True, scorecard.assemble(out, role, turns, {"scorecard_model": "fake"}, label), "fake", 1, "", 0.1)
+
+    monkeypatch.setattr(vapi, "fetch_finished_call", fake_fetch)
+    monkeypatch.setattr(scorecard, "generate", fake_generate)
+    return calls
+
+
+def _wait_ready(client, cid):
+    for _ in range(60):
+        d = client.get(f"/api/interviews/{cid}/scorecard", headers=H).json()
+        if d["status"] == "ready":
+            return d
+        time.sleep(0.05)
+    raise AssertionError("never became ready")
+
+
+def test_scorecard_is_written_once_and_survives_reloads_repeat_ends_and_retries(client, monkeypatch):
+    calls = _fake_pipeline(monkeypatch, [74, 75, 76])
+    sid = client.post("/api/sessions", headers=H).json()["session_id"]
+    client.post(f"/api/sessions/{sid}/call", json={"call_id": CALL_ID}, headers=H)
+    client.post(f"/api/sessions/{sid}/end", headers=H)
+    first = _wait_ready(client, CALL_ID)
+    assert first["scorecard"]["overall_score"] == 74 and len(calls) == 1
+    for _ in range(3):  # reloads
+        assert client.get(f"/api/interviews/{CALL_ID}/scorecard", headers=H).json()["scorecard"]["overall_score"] == 74
+    client.post(f"/api/sessions/{sid}/end", headers=H)  # the browser (or a double event) reports the end again
+    client.post(f"/api/sessions/{sid}/end", headers=H)
+    assert client.post(f"/api/interviews/{CALL_ID}/scorecard/retry", headers=H).status_code == 409  # retry only for failed/unusable
+    time.sleep(0.4)  # give any wrongly-started background job time to finish
+    after = client.get(f"/api/interviews/{CALL_ID}/scorecard", headers=H).json()
+    assert after["status"] == "ready" and after["scorecard"]["overall_score"] == 74 and after["scorecard"]["generated_at"] == first["scorecard"]["generated_at"]
+    assert len(calls) == 1, "the model was called again for a call that already had a scorecard"
+
+
+def test_save_card_never_overwrites_an_existing_scorecard(client):
+    store.create_live(CALL_ID)
+    a = scorecard.assemble({**good_output(), "overall_score": 74}, ROLE, TURNS, {}, "x")
+    b = scorecard.assemble({**good_output(), "overall_score": 75}, ROLE, TURNS, {}, "x")
+    assert store.save_card(CALL_ID, a, 1, 1.0) is True
+    assert store.save_card(CALL_ID, b, 1, 1.0) is False
+    assert store.get(CALL_ID)["score"] == 74
+
+
+def test_a_call_the_server_has_no_record_of_is_rebuilt_once_and_says_so(client, monkeypatch):
+    calls = _fake_pipeline(monkeypatch, [74, 75])
+    d = client.get(f"/api/interviews/{CALL_ID}/scorecard", headers=H)  # e.g. the host restarted and lost its disk
+    assert d.status_code == 200
+    ready = _wait_ready(client, CALL_ID)
+    assert ready["rebuilt"] is True and ready["scorecard"]["overall_score"] == 74
+    for _ in range(3):
+        assert client.get(f"/api/interviews/{CALL_ID}/scorecard", headers=H).json()["scorecard"]["overall_score"] == 74
+    assert len(calls) == 1
+
+
+def test_database_made_before_the_rebuilt_column_is_migrated_in_place(tmp_path):
+    import sqlite3
+    old = tmp_path / "old.db"
+    c = sqlite3.connect(old)
+    c.executescript("CREATE TABLE interviews (id TEXT PRIMARY KEY, kind TEXT NOT NULL, role_id TEXT NOT NULL, candidate_name TEXT NOT NULL, "
+                    "label TEXT NOT NULL, sample_kind TEXT, status TEXT NOT NULL, created_at REAL NOT NULL, ended_at REAL, duration_s REAL, "
+                    "ended_reason TEXT, has_recording INTEGER NOT NULL DEFAULT 0, turns_json TEXT, card_json TEXT, score INTEGER, "
+                    "recommendation TEXT, attempts INTEGER NOT NULL DEFAULT 0, error TEXT, generated_in_s REAL, updated_at REAL);"
+                    "INSERT INTO interviews (id, kind, role_id, candidate_name, label, status, created_at) VALUES ('keep', 'live', '5905', 'x', 'Live demo session', 'ready', 1);")
+    c.commit(); c.close()
+    store.reset(old)
+    assert store.get("keep")["rebuilt"] == 0 and store.get("keep")["status"] == "ready"
+    store.reset()

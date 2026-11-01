@@ -28,7 +28,8 @@ CREATE TABLE IF NOT EXISTS interviews (
   created_at REAL NOT NULL, ended_at REAL, duration_s REAL, ended_reason TEXT,
   has_recording INTEGER NOT NULL DEFAULT 0,
   turns_json TEXT, card_json TEXT, score INTEGER, recommendation TEXT,
-  attempts INTEGER NOT NULL DEFAULT 0, error TEXT, generated_in_s REAL, updated_at REAL
+  attempts INTEGER NOT NULL DEFAULT 0, error TEXT, generated_in_s REAL, updated_at REAL,
+  rebuilt INTEGER NOT NULL DEFAULT 0   -- 1 = this server had no record of the call (e.g. it restarted) and scored it again from Vapi
 );
 CREATE TABLE IF NOT EXISTS sessions (
   id TEXT PRIMARY KEY, created_at REAL NOT NULL, call_id TEXT, closed_at REAL
@@ -46,6 +47,8 @@ def conn() -> sqlite3.Connection:
         _conn = sqlite3.connect(cfg.DB_PATH, check_same_thread=False, isolation_level=None)
         _conn.row_factory = sqlite3.Row
         _conn.executescript(SCHEMA)
+        if "rebuilt" not in {r["name"] for r in _conn.execute("PRAGMA table_info(interviews)")}:  # database made before this column existed
+            _conn.execute("ALTER TABLE interviews ADD COLUMN rebuilt INTEGER NOT NULL DEFAULT 0")
     return _conn
 
 
@@ -123,11 +126,11 @@ def close_session(sid: str) -> sqlite3.Row | None:
 
 
 # ---- interviews ---------------------------------------------------------------------------------------------------------------------
-def create_live(call_id: str, name: str = "", role_id: str | None = None) -> None:
+def create_live(call_id: str, name: str = "", role_id: str | None = None, rebuilt: bool = False) -> None:
     now = time.time()
-    run("INSERT OR IGNORE INTO interviews (id, kind, role_id, candidate_name, label, status, created_at, updated_at) "
-        "VALUES (?, 'live', ?, ?, ?, 'in-progress', ?, ?)",
-        call_id, role_id or cfg.LIVE_ROLE_ID, name or cfg.LIVE_LABEL, cfg.LIVE_LABEL, now, now)
+    run("INSERT OR IGNORE INTO interviews (id, kind, role_id, candidate_name, label, status, created_at, updated_at, rebuilt) "
+        "VALUES (?, 'live', ?, ?, ?, 'in-progress', ?, ?, ?)",
+        call_id, role_id or cfg.LIVE_ROLE_ID, name or cfg.LIVE_LABEL, cfg.LIVE_LABEL, now, now, int(rebuilt))
 
 
 def update(interview_id: str, **fields) -> None:
@@ -142,9 +145,36 @@ def get(interview_id: str) -> sqlite3.Row | None:
     return one("SELECT * FROM interviews WHERE id = ?", interview_id)
 
 
-def save_card(interview_id: str, card: dict, attempts: int, seconds: float) -> None:
-    update(interview_id, status="ready", card_json=json.dumps(card, ensure_ascii=False), score=card["overall_score"],
-           recommendation=card["recommendation"], attempts=attempts, error=None, generated_in_s=round(seconds, 1))
+STALE_PROCESSING_S = 600  # a 'processing' row this old was left by a crashed worker and may be claimed again
+
+
+def claim_for_scoring(call_id: str) -> bool:
+    """Atomically move a live call to 'processing'. True only if the caller may now score it. A call that is 'ready' (or is being scored
+    right now) can never be claimed, so a repeated end event, a reload, a retry or a rebuild cannot start a second scoring of it."""
+    now = time.time()
+    with _lock:
+        cur = conn().execute(
+            "UPDATE interviews SET status = 'processing', error = NULL, updated_at = ? WHERE id = ? AND kind = 'live' AND "
+            "(status IN ('in-progress', 'failed', 'unusable') OR (status = 'processing' AND updated_at < ?))",
+            (now, call_id, now - STALE_PROCESSING_S))
+        return cur.rowcount == 1
+
+
+def save_card(interview_id: str, card: dict, attempts: int, seconds: float) -> bool:
+    """Write the scorecard ONCE. Returns False (and changes nothing) if the call already has one."""
+    with _lock:
+        cur = conn().execute(
+            "UPDATE interviews SET status = 'ready', card_json = ?, score = ?, recommendation = ?, attempts = ?, error = NULL, generated_in_s = ?, "
+            "updated_at = ? WHERE id = ? AND status != 'ready'",
+            (json.dumps(card, ensure_ascii=False), card["overall_score"], card["recommendation"], attempts, round(seconds, 1), time.time(), interview_id))
+        return cur.rowcount == 1
+
+
+def mark_unfinished(interview_id: str, status: str, **fields) -> None:
+    """Record a failed / unusable outcome, but never touch a call that already has its scorecard."""
+    fields.update(status=status, updated_at=time.time())
+    cols = ", ".join(f"{k} = ?" for k in fields)
+    run(f"UPDATE interviews SET {cols} WHERE id = ? AND status != 'ready'", *fields.values(), interview_id)
 
 
 def seed_samples() -> int:

@@ -136,6 +136,7 @@ export interface ScorecardResponse {
   candidate_name: string
   has_recording: boolean
   duration_s: number | null
+  rebuilt?: boolean
   message?: string
   scorecard?: Scorecard
   generated_in_s?: number

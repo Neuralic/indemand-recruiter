@@ -96,6 +96,12 @@ export default function ScorecardPage({ cfg }: { cfg: Config }) {
           {sc.recommendation_note && <p className="mt-3 text-sm text-navy-100">{sc.recommendation_note}</p>}
         </section>
 
+        {data.rebuilt && (
+          <p className="mt-3 rounded-xl bg-warn-soft px-4 py-3 text-sm text-warn" role="note">
+            This scorecard was rebuilt from the recording after a server restart, so the score can differ slightly from the first version.
+          </p>
+        )}
+
         {canPlay && <audio ref={audioRef} src={recordingUrl(id)} preload="none" controls className="mt-4 w-full" aria-label="Interview recording" />}
         {!canPlay && data.is_sample && <p className="mt-3 text-sm text-muted">This is a simulated interview, so there is no audio recording.</p>}
 
