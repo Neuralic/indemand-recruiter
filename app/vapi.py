@@ -56,6 +56,16 @@ def _headers() -> dict:
     return {"Authorization": f"Bearer {cfg.VAPI_PRIVATE_KEY}"}
 
 
+def clean_text(s: str) -> str:
+    """Vapi sometimes stores U+FFFD (a character it lost, usually an em dash) in transcript text. Between two letters it was most likely
+    an apostrophe; anywhere else, a spaced dash reads naturally. Only that one character is touched."""
+    if "�" not in s:
+        return s
+    s = re.sub(r"([A-Za-z])�(?=[A-Za-z])", r"\1'", s)
+    s = re.sub(r"\s*�\s*", " — ", s)
+    return " ".join(s.split())
+
+
 def turns_from_messages(messages: list[dict], call_seconds: float | None = None, started_at: float | None = None) -> list[dict]:
     """Vapi artifact.messages -> turns. Keeps only spoken lines (user / bot), merges back-to-back lines of one speaker.
 
@@ -67,7 +77,7 @@ def turns_from_messages(messages: list[dict], call_seconds: float | None = None,
     spoken = []
     for m in messages or []:
         role = (m.get("role") or "").lower()
-        text = " ".join(str(m.get("message") or m.get("content") or "").split())
+        text = clean_text(" ".join(str(m.get("message") or m.get("content") or "").split()))
         if not text or (role not in CANDIDATE_ROLES and role not in AVERY_ROLES):
             continue
         end, dur = m.get("endTime"), m.get("duration")

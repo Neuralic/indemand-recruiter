@@ -430,3 +430,63 @@ def test_database_made_before_the_rebuilt_column_is_migrated_in_place(tmp_path):
 def test_healthz_answers_get_and_head_without_a_token(client):
     assert client.get("/healthz").json() == {"ok": True}
     assert client.head("/healthz").status_code == 200  # uptime monitors default to HEAD
+
+
+# ---- retrying a failed connect inside one session --------------------------------------------------------------------------------------
+CALL_A = "01a00000-aaaa-bbbb-cccc-000000000001"
+CALL_B = "01a00000-aaaa-bbbb-cccc-000000000002"
+CALL_C = "01a00000-aaaa-bbbb-cccc-000000000003"
+
+
+def test_a_failed_connect_is_replaced_in_the_same_session_without_a_ghost_row(client):
+    sid = client.post("/api/sessions", headers=H).json()["session_id"]
+    assert client.post(f"/api/sessions/{sid}/call", json={"call_id": CALL_A}, headers=H).status_code == 200
+    assert store.get(CALL_A) is not None
+    r = client.post(f"/api/sessions/{sid}/call", json={"call_id": CALL_B, "replaces": CALL_A}, headers=H)
+    assert r.status_code == 200 and store.get(CALL_A) is None and store.get(CALL_B)["status"] == "in-progress"
+    assert store.one("SELECT call_id FROM sessions WHERE id = ?", sid)["call_id"] == CALL_B
+    # the same id posted twice is harmless; a different id without naming the call it replaces is refused
+    assert client.post(f"/api/sessions/{sid}/call", json={"call_id": CALL_B}, headers=H).status_code == 200
+    assert client.post(f"/api/sessions/{sid}/call", json={"call_id": CALL_C}, headers=H).status_code == 409
+    assert client.post(f"/api/sessions/{sid}/call", json={"call_id": CALL_C, "replaces": CALL_A}, headers=H).status_code == 409
+
+
+def test_a_call_that_is_being_scored_or_scored_can_never_be_replaced(client):
+    sid = client.post("/api/sessions", headers=H).json()["session_id"]
+    client.post(f"/api/sessions/{sid}/call", json={"call_id": CALL_A}, headers=H)
+    for status in ("processing", "ready"):
+        store.update(CALL_A, status=status)
+        assert client.post(f"/api/sessions/{sid}/call", json={"call_id": CALL_B, "replaces": CALL_A}, headers=H).status_code == 409
+        assert store.get(CALL_A)["status"] == status and store.get(CALL_B) is None
+
+
+def test_ending_with_discard_forgets_an_unscored_call_but_never_a_scored_one(client, monkeypatch):
+    calls = _fake_pipeline(monkeypatch, [74, 75])
+    sid = client.post("/api/sessions", headers=H).json()["session_id"]
+    client.post(f"/api/sessions/{sid}/call", json={"call_id": CALL_A}, headers=H)
+    assert client.post(f"/api/sessions/{sid}/end?discard=true", headers=H).json() == {"interview_id": None, "discarded": True}
+    assert store.get(CALL_A) is None and len(calls) == 0  # nothing to score, nothing left behind
+    assert client.post("/api/sessions", headers=H).status_code == 200  # and the slot is free again
+    # a call that already has its scorecard is left alone even if discard is requested
+    store.create_live(CALL_B)
+    store.update(CALL_B, status="ready", card_json=json.dumps(scorecard.assemble(good_output(), ROLE, TURNS, {}, "x")), score=80, recommendation="Submit")
+    s2 = store.open_session(now=time.time() + 5000)  # a later session (the earlier slot expired)
+    store.run("UPDATE sessions SET call_id = ? WHERE id = ?", CALL_B, s2)
+    assert client.post(f"/api/sessions/{s2}/end?discard=true", headers=H).status_code == 200
+    assert store.get(CALL_B)["status"] == "ready" and store.get(CALL_B)["score"] == 80 and len(calls) == 0
+
+
+# ---- transcript clean-up and the conflicting-figures rule ---------------------------------------------------------------------------
+def test_lost_characters_in_vapi_text_are_cleaned_on_ingest():
+    assert vapi.clean_text("That makes sense� a bigger team.") == "That makes sense — a bigger team."
+    assert vapi.clean_text("I�m the lead") == "I'm the lead"          # lost apostrophe between letters
+    assert vapi.clean_text("Yes�") == "Yes —"
+    assert vapi.clean_text("nothing to fix") == "nothing to fix"
+    t = vapi.turns_from_messages([{"role": "bot", "message": "That makes sense� a bigger team", "secondsFromStart": 1.0}])
+    assert "�" not in t[0]["text"] and "sense — a bigger" in t[0]["text"]
+
+
+def test_scorecard_prompt_tells_the_model_to_trust_the_latest_figure_and_flag_conflicts():
+    text = scorecard.build_instructions(ROLE)
+    assert "26 people" in text and "latest" in text and "verify_on_call" in text
+    assert cfg.SCORECARD_PROMPT_VERSION == "scorecard-claude-v3"

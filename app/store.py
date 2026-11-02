@@ -170,6 +170,13 @@ def save_card(interview_id: str, card: dict, attempts: int, seconds: float) -> b
         return cur.rowcount == 1
 
 
+def delete_unscored(call_id: str) -> bool:
+    """Forget a live call that never produced anything (a connect that failed). Only a call still 'in-progress' can be removed:
+    one that is being scored, or has its scorecard, is never touched."""
+    with _lock:
+        return conn().execute("DELETE FROM interviews WHERE id = ? AND kind = 'live' AND status = 'in-progress'", (call_id,)).rowcount == 1
+
+
 def mark_unfinished(interview_id: str, status: str, **fields) -> None:
     """Record a failed / unusable outcome, but never touch a call that already has its scorecard."""
     fields.update(status=status, updated_at=time.time())

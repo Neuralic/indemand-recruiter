@@ -102,7 +102,7 @@ export default function ScorecardPage({ cfg }: { cfg: Config }) {
           </p>
         )}
 
-        {canPlay && <audio ref={audioRef} src={recordingUrl(id)} preload="none" controls className="mt-4 w-full" aria-label="Interview recording" />}
+        {canPlay && <audio ref={audioRef} src={recordingUrl(id)} preload="metadata" controls className="mt-4 w-full" aria-label="Interview recording" />}
         {!canPlay && data.is_sample && <p className="mt-3 text-sm text-muted">This is a simulated interview, so there is no audio recording.</p>}
 
         <h2 className="mt-8 text-lg font-semibold text-navy-900">Requirements</h2>

@@ -4,7 +4,8 @@ import type Vapi from '@vapi-ai/web'
 import { ApiError, api, rememberCall, to, type Config } from '../api'
 import { useMicCheck, webrtcLooksBlocked } from '../mic'
 import { loadVapi, describeError } from '../vapiSdk'
-import { Banner, Eyebrow, FixList, InCall, Ring, STATE_SUB, STATE_TEXT, type Line, type Partials, type RingState } from '../room'
+import { cleanText } from '../text'
+import { Banner, Eyebrow, FixList, InCall, Ring, SlowConnectNote, STATE_SUB, STATE_TEXT, type Line, type Partials, type RingState } from '../room'
 import { Button, Shell } from '../ui'
 
 const DISCLOSURE =
@@ -21,6 +22,13 @@ export const NO_AUDIO_FIXES = [
   'Close other apps or tabs that might be using the microphone (Zoom, Teams, Meet).',
   'Try a different network, for example your phone’s hotspot instead of office Wi‑Fi.',
 ]
+
+// Connecting. Facts from the call logs: on this network a healthy call takes 12 to 14 s to connect, and a call that never gets audio is
+// ended by Vapi after 15 s ("did not receive customer audio"). So a failed first attempt is retried quietly, in the same session, up to
+// MAX_AUTO_RETRIES times, and the candidate only sees an error if every attempt fails.
+const MAX_AUTO_RETRIES = 2
+const RETRY_DELAY_MS = 1200
+const CONNECT_FAILSAFE_MS = 25_000 // Vapi normally ends a dead attempt itself at 15 s; this covers the case where no event ever arrives
 
 const Card = ({ children, label }: { children: React.ReactNode; label: string }) => (
   <section className="rounded-2xl border border-line bg-white p-5 sm:p-6" aria-labelledby={label}>{children}</section>
@@ -55,6 +63,13 @@ export default function Interview({ cfg }: { cfg: Config }) {
   const heardAveryRef = useRef(false)
   const speakingRef = useRef(false)
   const logRef = useRef<HTMLDivElement | null>(null)
+  const connectedRef = useRef(false) // Vapi has said it is listening (or Avery has been heard) for the current attempt
+  const attemptRef = useRef(0)
+  const retriesLeftRef = useRef(MAX_AUTO_RETRIES)
+  const lastPostedRef = useRef<string | null>(null) // the call currently registered on the server for this session
+  const failsafeRef = useRef<number | null>(null)
+  const timelineRef = useRef<string[]>([])
+  const tStartRef = useRef(0)
 
   const setLevel = (v: number) => ringRef.current?.style.setProperty('--lvl', String(Math.max(0, Math.min(1, v))))
 
@@ -64,6 +79,11 @@ export default function Interview({ cfg }: { cfg: Config }) {
     void loadVapi().catch((e) => console.error('[interview] voice SDK failed to load:', e))
     void webrtcLooksBlocked().then(setNetBlocked)
   }, [phase])
+
+  // The microphone preview stays open while connecting (a warm device is the point) and is released once the call is live or has failed.
+  useEffect(() => {
+    if (phase === 'incall' || phase === 'error') mic.stop()
+  }, [phase, mic.stop])
 
   const beginPrecall = () => {
     setPhase('precall')
@@ -106,14 +126,142 @@ export default function Interview({ cfg }: { cfg: Config }) {
     return () => { clearInterval(id); clearInterval(lv); clearTimeout(watchdog) }
   }, [phase, cfg.max_call_seconds, finish])
 
+  // ---- connecting, with a quiet automatic retry ---------------------------------------------------------------------------------------
+  const note = (m: string) => {
+    timelineRef.current = [...timelineRef.current.slice(-39), `${((Date.now() - tStartRef.current) / 1000).toFixed(1)}s ${m}`]
+    console.info('[interview]', m)
+  }
+  const clearFailsafe = () => {
+    if (failsafeRef.current) window.clearTimeout(failsafeRef.current)
+    failsafeRef.current = null
+  }
+
+  /** Every attempt failed (or something that must not be retried happened): show the error, forget the failed call, free the slot. */
+  const abandon = async (e: unknown, kind?: ErrorKind) => {
+    if (!startedRef.current) return // already handled
+    startedRef.current = false
+    clearFailsafe()
+    console.error('[interview] voice unavailable:', e)
+    setErrorDetail((d) => d || [describeError(e), ...timelineRef.current].join('\n'))
+    const txt = describeError(e).toLowerCase()
+    setErrorKind(kind ?? (txt.includes('permission') || txt.includes('notallowed') || txt.includes('microphone') ? 'connection' : 'voice'))
+    setPhase('error')
+    const v = vapiRef.current
+    vapiRef.current = null
+    try { await v?.stop() } catch { /* nothing to stop */ }
+    if (sessionRef.current) void api(`/sessions/${sessionRef.current}/end?discard=true`, { method: 'POST' }).catch(() => {})
+  }
+
+  /** An attempt that never reached "listening": hang it up, wait a moment, and try again in the same session. */
+  const connectFailed = async (vapi: Vapi, why: string) => {
+    if (vapiRef.current !== vapi || finishedRef.current || connectedRef.current) return
+    clearFailsafe()
+    note(`attempt ${attemptRef.current} failed: ${why}`)
+    vapiRef.current = null
+    try { await vapi.stop() } catch { /* already closed */ }
+    if (retriesLeftRef.current > 0) {
+      retriesLeftRef.current -= 1
+      await new Promise((r) => window.setTimeout(r, RETRY_DELAY_MS))
+      if (finishedRef.current || !startedRef.current) return
+      try { await connectOnce() } catch (e) { await abandon(e) }
+      return
+    }
+    await abandon(new Error(`The call never connected (${why})`), 'connection')
+  }
+
+  const connectOnce = async (): Promise<void> => {
+    const n = ++attemptRef.current
+    connectedRef.current = false
+    heardAveryRef.current = false
+    speakingRef.current = false
+    callRef.current = null
+    note(`attempt ${n}: starting`)
+    const VapiSdk = await loadVapi()
+    const vapi = new VapiSdk(cfg.vapi_public_key)
+    vapiRef.current = vapi
+    const live = () => vapiRef.current === vapi && !finishedRef.current // events from an abandoned attempt are ignored
+    const markConnected = () => {
+      if (!live() || connectedRef.current) return
+      connectedRef.current = true
+      clearFailsafe()
+      note(`attempt ${n}: connected`)
+      setPhase('incall')
+      setOrbState('listening')
+    }
+    vapi.on('call-start-progress', (e) => { if (live()) note(`${e.stage} ${e.status}${e.duration != null ? ` ${e.duration}ms` : ''}`) })
+    vapi.on('call-start', markConnected) // Vapi's "listening": its pipeline is up and receiving our audio
+    vapi.on('speech-start', () => {
+      if (!live()) return
+      markConnected()
+      heardAveryRef.current = true; speakingRef.current = true; setNoAudio(false); setOrbState('speaking')
+    })
+    vapi.on('speech-end', () => { if (live()) { speakingRef.current = false; setOrbState('listening'); setLevel(0) } })
+    vapi.on('volume-level', (v) => {
+      if (!live()) return
+      if (v > 0.02) { markConnected(); heardAveryRef.current = true; setNoAudio(false) }
+      if (speakingRef.current) setLevel(v)
+    })
+    vapi.on('message', (m: { type?: string; role?: string; transcript?: string; transcriptType?: string }) => {
+      if (!live()) return
+      // SDK types: type is 'transcript' or "transcript[transcriptType='final']"; role 'assistant' | 'user'; transcriptType 'partial' | 'final'
+      if (!m.type?.startsWith('transcript') || !m.transcript || (m.role !== 'user' && m.role !== 'assistant')) return
+      markConnected()
+      const role = m.role
+      const text = cleanText(m.transcript)
+      if (m.transcriptType === 'final') {
+        setLines((l) => [...l, { role, text }])
+        setPartial((p) => ({ ...p, [role]: undefined }))
+        if (role === 'user') setOrbState((s) => (s === 'speaking' ? s : 'thinking'))
+      } else {
+        setPartial((p) => ({ ...p, [role]: text }))
+      }
+    })
+    vapi.on('call-end', () => {
+      if (vapiRef.current !== vapi || finishedRef.current) return
+      if (connectedRef.current) void finish() // Avery hangs up by herself: straight to the scorecard
+      else void connectFailed(vapi, 'the call ended before Avery could hear you')
+    })
+    vapi.on('error', (e: unknown) => {
+      const txt = describeError(e).toLowerCase()
+      console.error('[interview] voice SDK error event:', e)
+      if (!live()) return
+      if (!connectedRef.current) {
+        // Vapi closing the room on a dead attempt can surface as an error; retry that. Anything else (permission, network to Vapi) is real.
+        if (callRef.current && /ejected|meeting has ended|disconnect|ended|left/.test(txt)) void connectFailed(vapi, 'the connection dropped before Avery could hear you')
+        else void abandon(e)
+        return
+      }
+      // Mid-call error: a dropped connection ends the call; the transcript so far is still scored.
+      if (txt.includes('ejected') || txt.includes('ended') || txt.includes('network') || txt.includes('disconnect')) {
+        setErrorKind('dropped'); setPhase('error'); void finish({ dropped: true })
+      }
+    })
+    const call = await vapi.start(cfg.vapi_assistant_id, undefined, undefined, undefined, undefined, { roomDeleteOnUserLeaveEnabled: true })
+    if (!call?.id) throw new Error('no call id')
+    if (!live()) return // this attempt was already given up on while start() was still running
+    callRef.current = call.id
+    rememberCall(call.id)
+    await api(`/sessions/${sessionRef.current}/call`, { method: 'POST', body: JSON.stringify({ call_id: call.id, replaces: lastPostedRef.current }) })
+    lastPostedRef.current = call.id
+    note(`attempt ${n}: call created, waiting for Vapi to listen`)
+    if (!connectedRef.current && live()) {
+      failsafeRef.current = window.setTimeout(() => { void connectFailed(vapi, `no answer after ${CONNECT_FAILSAFE_MS / 1000} s`) }, CONNECT_FAILSAFE_MS)
+    }
+  }
+
   const start = async () => {
     if (startedRef.current) return
     startedRef.current = true
     finishedRef.current = false
     setLines([]); setPartial({}); setNoAudio(false); setSecs(0); setConfirmEnd(false); setAskedPerson(false); setMuted(false); setErrorDetail('')
     heardAveryRef.current = false
-    setPhase('connecting')
-    mic.stop() // release the preview so the call can take the microphone
+    connectedRef.current = false
+    attemptRef.current = 0
+    retriesLeftRef.current = MAX_AUTO_RETRIES
+    lastPostedRef.current = null
+    timelineRef.current = []
+    tStartRef.current = Date.now()
+    setPhase('connecting') // the microphone preview stays open until the call is live
     try {
       const { session_id } = await api<{ session_id: string }>('/sessions', { method: 'POST' })
       sessionRef.current = session_id
@@ -125,62 +273,9 @@ export default function Interview({ cfg }: { cfg: Config }) {
       return
     }
     try {
-      const VapiSdk = await loadVapi()
-      const vapi = new VapiSdk(cfg.vapi_public_key)
-      vapiRef.current = vapi
-      vapi.on('call-start', () => { setPhase('incall'); setOrbState('listening') })
-      vapi.on('speech-start', () => { heardAveryRef.current = true; speakingRef.current = true; setNoAudio(false); setOrbState('speaking') })
-      vapi.on('speech-end', () => { speakingRef.current = false; setOrbState('listening'); setLevel(0) })
-      vapi.on('volume-level', (v) => {
-        if (v > 0.02) { heardAveryRef.current = true; setNoAudio(false) }
-        if (speakingRef.current) setLevel(v)
-      })
-      vapi.on('message', (m: { type?: string; role?: string; transcript?: string; transcriptType?: string }) => {
-        // SDK types: type is 'transcript' or "transcript[transcriptType='final']"; role 'assistant' | 'user'; transcriptType 'partial' | 'final'
-        if (!m.type?.startsWith('transcript') || !m.transcript || (m.role !== 'user' && m.role !== 'assistant')) return
-        const role = m.role
-        if (m.transcriptType === 'final') {
-          setLines((l) => [...l, { role, text: m.transcript! }])
-          setPartial((p) => ({ ...p, [role]: undefined }))
-          if (role === 'user') setOrbState((s) => (s === 'speaking' ? s : 'thinking'))
-        } else {
-          setPartial((p) => ({ ...p, [role]: m.transcript }))
-        }
-      })
-      vapi.on('call-end', () => { void finish() }) // Avery hangs up by herself: straight to the scorecard
-      vapi.on('error', (e: unknown) => {
-        const txt = describeError(e).toLowerCase()
-        console.error('[interview] voice SDK error event:', e)
-        if (finishedRef.current) return
-        if (!callRef.current) {
-          setErrorDetail(describeError(e))
-          setErrorKind(txt.includes('permission') || txt.includes('notallowed') ? 'connection' : 'voice')
-          setPhase('error')
-          startedRef.current = false
-          void api(`/sessions/${sessionRef.current}/end`, { method: 'POST' }).catch(() => {})
-          return
-        }
-        // Mid-call error: a dropped connection ends the call; the transcript so far is still scored.
-        if (txt.includes('ejected') || txt.includes('ended') || txt.includes('network') || txt.includes('disconnect')) {
-          setErrorKind('dropped'); setPhase('error'); void finish({ dropped: true })
-        }
-      })
-      const call = await vapi.start(cfg.vapi_assistant_id, undefined, undefined, undefined, undefined, { roomDeleteOnUserLeaveEnabled: true })
-      if (!call?.id) throw new Error('no call id')
-      callRef.current = call.id
-      rememberCall(call.id)
-      await api(`/sessions/${sessionRef.current}/call`, { method: 'POST', body: JSON.stringify({ call_id: call.id }) })
-      setPhase((p) => (p === 'connecting' ? 'incall' : p))
+      await connectOnce()
     } catch (e) {
-      console.error('[interview] voice unavailable, start failed:', e)
-      setErrorDetail((d) => d || describeError(e)) // keep the SDK's own error event if it already reported one
-      startedRef.current = false
-      const txt = describeError(e).toLowerCase()
-      setErrorKind(txt.includes('permission') || txt.includes('notallowed') || txt.includes('microphone') ? 'connection' : 'voice')
-      setPhase('error')
-      try { await vapiRef.current?.stop() } catch { /* nothing to stop */ }
-      vapiRef.current = null
-      if (sessionRef.current) void api(`/sessions/${sessionRef.current}/end`, { method: 'POST' }).catch(() => {})
+      await abandon(e)
     }
   }
 
@@ -301,6 +396,7 @@ export default function Interview({ cfg }: { cfg: Config }) {
           <Ring state="thinking" />
           <h1 className="serif mt-8 text-3xl text-navy-900">Connecting to Avery…</h1>
           <p className="mt-2 text-muted">She will say hello as soon as you’re connected.</p>
+          <SlowConnectNote />
         </div>
       </Shell>
     )

@@ -80,6 +80,7 @@ def new_session():
 
 class CallBody(BaseModel):
     call_id: str
+    replaces: str | None = None  # a retry inside the same session: the call that failed to connect and is being replaced
 
 
 @router.post("/sessions/{sid}/call")
@@ -89,18 +90,29 @@ def session_call(sid: str, body: CallBody):
     s = store.one("SELECT * FROM sessions WHERE id = ?", sid)
     if not s:
         raise HTTPException(404, "unknown session")
-    store.run("UPDATE sessions SET call_id = ? WHERE id = ? AND call_id IS NULL", body.call_id, sid)
+    current = s["call_id"]
+    if current and current != body.call_id:
+        # The only way a session may change its call is to replace one that never connected (an automatic retry). It must be named, and it
+        # must still be unscored, so a call that has a transcript or a scorecard can never be swapped out from under a session.
+        if body.replaces != current:
+            raise HTTPException(409, "this session already has a call")
+        if not store.delete_unscored(current):
+            raise HTTPException(409, "the earlier call can no longer be replaced")
+    store.run("UPDATE sessions SET call_id = ? WHERE id = ?", body.call_id, sid)
     store.create_live(body.call_id)
     return {"interview_id": body.call_id}
 
 
 @router.post("/sessions/{sid}/end")
-async def session_end(sid: str):
-    """The call is over (Avery hung up, the candidate ended it, or it dropped). Frees the slot and starts the scorecard."""
+async def session_end(sid: str, discard: bool = Query(default=False)):
+    """The call is over (Avery hung up, the candidate ended it, or it dropped). Frees the slot and starts the scorecard.
+    With discard=true (the call never connected) a call that is still unscored is forgotten instead of scored, leaving no ghost row."""
     s = store.close_session(sid)
     if not s:
         raise HTTPException(404, "unknown session")
     if s["call_id"]:
+        if discard and store.delete_unscored(s["call_id"]):
+            return {"interview_id": None, "discarded": True}
         start_processing(s["call_id"])
         return {"interview_id": s["call_id"]}
     return {"interview_id": None}

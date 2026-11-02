@@ -1,4 +1,4 @@
-import { useEffect, useRef, type ReactNode, type RefObject } from 'react'
+import { useEffect, useRef, useState, type ReactNode, type RefObject } from 'react'
 import { Button, mmss } from './ui'
 
 export type RingState = 'speaking' | 'listening' | 'thinking' | 'muted'
@@ -25,6 +25,16 @@ export function Banner() {
       <span>Prototype for IN DEMAND to evaluate. Please don’t enter real candidate details.</span>
     </p>
   )
+}
+
+/** Shown on the connecting screen after a few seconds: a healthy connect sometimes takes 12 to 14 s on slower networks. */
+export function SlowConnectNote() {
+  const [slow, setSlow] = useState(false)
+  useEffect(() => {
+    const t = window.setTimeout(() => setSlow(true), 9000)
+    return () => window.clearTimeout(t)
+  }, [])
+  return slow ? <p className="mt-3 text-sm text-muted" role="status">Still connecting. On some networks this takes up to about 15 seconds.</p> : null
 }
 
 export function Eyebrow({ children }: { children: ReactNode }) {
